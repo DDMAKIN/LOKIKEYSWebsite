@@ -1,0 +1,7 @@
+# LOKI KEYS security contact (RFC 9116)
+Contact: mailto:support@lokikeys.com
+Expires: 2027-11-21T00:00:00.000Z
+Preferred-Languages: en, hi
+Policy: https://ditch-mess-23616146.figma.site/security.html
+Acknowledgments: https://ditch-mess-23616146.figma.site/security.html#thanks
+Canonical: https://ditch-mess-23616146.figma.site/.well-known/security.txt

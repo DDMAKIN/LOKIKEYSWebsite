@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.png">
+<link rel="stylesheet" href="/legal.css">
+<title>Security &amp; Trust | LOKI KEYS</title>
+<meta name="description" content="How LOKI KEYS protects your account, payments and personal data, and how to report a security issue.">
+<meta property="og:title" content="Security &amp; Trust | LOKI KEYS">
+</head>
+<body>
+<header class="top"><div><a class="brand" href="/">LOKI <span>KEYS</span>.</a><nav aria-label="Help pages"><a href="/">Shop</a><a href="/contact.html">Contact</a><a href="/refund-policy.html">Refunds</a><a href="/terms.html">Terms</a><a href="/privacy-policy.html">Privacy</a><a href="/security.html" aria-current="page">Security</a></nav></div></header>
+<main>
+<span class="eyebrow">SECURITY. IN PLAIN WORDS.</span>
+<h1>Security &amp; Trust</h1>
+<p class="updated">Last reviewed: 21 November 2026</p>
+<p>This page explains exactly how LOKI KEYS keeps your account, your payment and your data safe, so you don't have to take it on trust.</p>
+
+<div class="card"><strong>The short version:</strong> we never see your card details or your password, the site loads no tracking without your permission, and every change to our code is checked automatically before it goes live.</div>
+
+<h2>Payments</h2>
+<ul>
+  <li>You pay on <strong>Wix's hosted checkout</strong>, which is PCI DSS compliant. Your card number goes straight to Wix and its payment providers; it never touches our website or our team.</li>
+  <li>Prices are shown in US dollars before you pay, with any sales tax shown at checkout and no added card fees.</li>
+</ul>
+
+<h2>Your account</h2>
+<ul>
+  <li>Accounts run on the Wix store's member system. <strong>Passwords are stored and checked by Wix</strong>; we never receive them.</li>
+  <li><strong>Continue with Google</strong> is handled by Wix and Google. We only receive your name and email.</li>
+  <li>Sign-in uses the OAuth 2.0 <strong>PKCE</strong> standard: each sign-in link works once, only in the browser tab that started it, and expires after 15 minutes.</li>
+  <li>Sign-in forms don't reveal whether an email has an account, repeated wrong passwords are slowed down, and Wix blocks known abusive networks.</li>
+  <li>Where mobile sign-in is offered, the one-time SMS code is sent and checked by Google Firebase with bot protection, and each code can be used only once.</li>
+</ul>
+
+<h2>Privacy by default</h2>
+<ul>
+  <li>No analytics or ad tracking loads unless you agree. If your browser sends a <strong>Global Privacy Control</strong> signal, advertising cookies stay off automatically.</li>
+  <li>Fonts and images are served from our own site, so loading a page doesn't share your IP address with font providers.</li>
+  <li>We never sell your personal data. See our <a href="/privacy-policy.html">privacy policy</a> for your rights in India, the US and Canada.</li>
+</ul>
+
+<h2>How the website is protected</h2>
+<ul>
+  <li>HTTPS everywhere with HSTS, and a strict <strong>Content Security Policy</strong> that blocks scripts from anywhere we haven't approved.</li>
+  <li>The site can't be framed by other websites (clickjacking protection) and sends strict referrer, permissions and cross-origin policies.</li>
+  <li>Every code change runs automated checks: type-checking, security tests for sign-in, a build, a scan for known vulnerable packages, GitHub CodeQL code scanning and a scan for accidentally committed secrets.</li>
+  <li>Dependencies and build tools are pinned to exact versions and updated through reviewed pull requests.</li>
+</ul>
+
+<h2 id="report">Report a security issue</h2>
+<p>If you think you've found a vulnerability, email <a href="mailto:support@lokikeys.com?subject=Security">support@lokikeys.com</a> with the subject <strong>"Security"</strong>. Please include the page, what you found and how to reproduce it.</p>
+<ul>
+  <li>We acknowledge reports within <strong>3 working days</strong> and keep you updated until it's fixed.</li>
+  <li>Please don't access other people's data, run denial-of-service or spam tests, or use social engineering. Testing done in good faith under these rules won't lead to legal action from us.</li>
+  <li>Give us reasonable time to fix an issue before telling anyone else.</li>
+</ul>
+<p>Our machine-readable contact is at <a href="/.well-known/security.txt">/.well-known/security.txt</a>.</p>
+
+<h2 id="thanks">Thanks</h2>
+<p>We'll gladly credit researchers who report issues responsibly here, with their permission.</p>
+</main>
+<footer><div><span>© 2026 LOKI KEYS. Independent reseller, not affiliated with the software publishers. All trademarks belong to their owners.</span><span><a href="mailto:support@lokikeys.com">support@lokikeys.com</a></span></div></footer>
+</body>
+</html>

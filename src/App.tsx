@@ -6,6 +6,7 @@ import { SITE } from "./site";
 import { startCheckout } from "./wixCheckout";
 import { AuthPanel } from "./AuthPanel";
 import { completeSignInFromUrl, getMyMember, type Member } from "./auth";
+import { ConsentBanner, applyChoice, readChoice, trackingConfigured } from "./consent";
 import {
   RewardWheel,
   pickReward,
@@ -235,6 +236,13 @@ export default function App() {
   const [member, setMember] = useState<Member | null>(null);
   const [toastAction, setToastAction] = useState<"bag" | "none">("bag");
   const [scrolled, setScrolled] = useState(false);
+  const [consentOpen, setConsentOpen] = useState(false);
+  useEffect(() => {
+    if (!trackingConfigured) return;
+    const choice = readChoice();
+    if (choice) applyChoice(choice);
+    else setConsentOpen(true);
+  }, []);
   const [footerInView, setFooterInView] = useState(false);
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -287,7 +295,7 @@ export default function App() {
     setInfo("rewards");
   };
   useEffect(() => {
-    document.title = "LOKI KEYS — Antivirus, VPN and Office licence keys";
+    document.title = "LOKI KEYS — Antivirus, VPN and Office license keys";
     let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!description) {
       description = document.createElement("meta");
@@ -295,7 +303,7 @@ export default function App() {
       document.head.appendChild(description);
     }
     description.content =
-      "Licence keys for Norton, McAfee, Malwarebytes, Bitdefender, Watchdog and Microsoft Office. Pay securely, get your key by email and activate it on the publisher's official site.";
+      "License keys for Norton, McAfee, Malwarebytes, Bitdefender, Watchdog and Microsoft Office. Pay securely, get your key by email and activate it on the publisher's official site.";
   }, []);
   useEffect(() => {
     let active = true;
@@ -544,7 +552,7 @@ export default function App() {
               </h1>
               <p>
                 Upgrade your setup. Not your spending.
-                <br className="desktop-break" /> Genuine software keys for your next level.
+                <br className="desktop-break" /> Software license keys for your next level.
               </p>
               <div className="hero-actions">
                 <button className="button primary" onClick={() => goToShop()}>
@@ -559,11 +567,11 @@ export default function App() {
               </div>
               <div className="hero-assurance">
                 <span>
-                  <Icon name="shield" size={15} /> Genuine licenses
+                  <Icon name="shield" size={15} /> Activation support
                 </span>
                 <i />
                 <span>
-                  <Icon name="bolt" size={15} /> Instant digital delivery
+                  <Icon name="bolt" size={15} /> Digital delivery by email
                 </span>
               </div>
             </div>
@@ -591,8 +599,8 @@ export default function App() {
                   <Icon name="shield" size={20} />
                 </span>
                 <div>
-                  <strong>Real keys. Real peace of mind.</strong>
-                  <small>Activate with the official publisher</small>
+                  <strong>Clear regions. No surprises.</strong>
+                  <small>Activate on the publisher’s own site</small>
                 </div>
               </div>
               <div className="floating-label label-bottom">
@@ -634,7 +642,7 @@ export default function App() {
             <h2>
               {reward
                 ? `Your ${reward.percent}% reward is waiting.`
-                : "Hack your price. Unlock up to 20% off."}
+                : "Unlock your price. Up to 20% off."}
             </h2>
             <p>
               {rewardApplied
@@ -652,7 +660,7 @@ export default function App() {
             <div>
               <div className="eyebrow">THE SOFTWARE VAULT // SELECT YOUR UPGRADE</div>
               <h2>Build your next-level setup.</h2>
-              <p>Trusted software. Instant access. Zero compromises.</p>
+              <p>Well-known software. Clear regions. Delivered by email.</p>
             </div>
             <button
               className="text-button view-all-top"
@@ -788,14 +796,6 @@ export default function App() {
                     <div className="price">
                       {money(product.price)}
                       <span>USD</span>
-                      {product.listPrice && product.listPrice > product.price && (
-                        <span className="price-was">
-                          <s aria-label={`was ${money(product.listPrice)}`}>
-                            {money(product.listPrice)}
-                          </s>
-                          <b>Save {Math.round((1 - product.price / product.listPrice) * 100)}%</b>
-                        </span>
-                      )}
                     </div>
                     <button
                       className="add-button"
@@ -820,8 +820,8 @@ export default function App() {
                     </span>
                   </label>
                   <div className="delivery-line">
-                    <span /> Digital delivery <span className="delivery-separator">·</span> License
-                    key
+                    <span /> Activates in {product.region}{" "}
+                    <span className="delivery-separator">·</span> Email delivery
                   </div>
                 </div>
               </article>
@@ -885,13 +885,13 @@ export default function App() {
           {[
             {
               icon: "shield",
-              title: "Genuine. Always.",
-              text: "Real software keys. Activate directly with the official publisher.",
+              title: "Clear before you buy.",
+              text: "Every listing shows its devices, term and activation region up front.",
             },
             {
               icon: "bolt",
-              title: "In your inbox. In an instant.",
-              text: "No shipping. No waiting around. Just your key, ready to go.",
+              title: "Delivered to your inbox.",
+              text: `No shipping. Your key arrives by email ${SITE.deliveryTime}.`,
             },
             {
               icon: "key",
@@ -1078,19 +1078,18 @@ export default function App() {
               </a>
               <span>{SITE.supportHours}</span>
               <span>{SITE.replyTime}</span>
+              {SITE.phone && <a href={`tel:${SITE.phone.replace(/\s/g, "")}`}>{SITE.phone}</a>}
+              {SITE.legalName && <span>{SITE.legalName}</span>}
+              {SITE.address && <span>{SITE.address}</span>}
             </div>
             <div className="footer-note">
               <Icon name="shield" size={27} />
               <h3>
                 Your next chapter.
                 <br />
-                Genuinely unlocked.
+                Simply unlocked.
               </h3>
-              <p>
-                Independent software reseller.
-                <br />
-                All trademarks belong to their respective owners.
-              </p>
+              <p>{SITE.disclaimer}</p>
             </div>
           </div>
           <div className="footer-bottom">
@@ -1099,12 +1098,19 @@ export default function App() {
               <a href="/privacy-policy.html">Privacy policy</a>
               <a href="/terms.html">Terms of use</a>
               <a href="/refund-policy.html">Refund policy</a>
+              <a href="/security.html">Security</a>
+              {trackingConfigured && (
+                <button className="text-link" onClick={() => setConsentOpen(true)}>
+                  Your privacy choices
+                </button>
+              )}
               <span>USD $</span>
             </div>
           </div>
         </div>
       </footer>
 
+      <ConsentBanner open={consentOpen} onClose={() => setConsentOpen(false)} />
       {!overlay && (
         <button
           className={`rewards-launcher ${compareIds.length ? "above-comparison" : ""} ${footerInView ? "is-tucked" : ""}`}
@@ -1385,9 +1391,21 @@ export default function App() {
                   </div>
                   <div>
                     <dt>Delivery</dt>
-                    <dd>Digital license key by email</dd>
+                    <dd>License key by email, {SITE.deliveryTime}. Nothing is shipped.</dd>
+                  </div>
+                  <div>
+                    <dt>Activation</dt>
+                    <dd>On the publisher’s own website, using your key</dd>
+                  </div>
+                  <div>
+                    <dt>If it doesn’t work</dt>
+                    <dd>
+                      Replacement or refund.{" "}
+                      <a href="/refund-policy.html">Delivery &amp; refunds</a>
+                    </dd>
                   </div>
                 </dl>
+                <p className="detail-disclaimer">{SITE.disclaimer}</p>
                 {selected.region === "See activation guide" && (
                   <p className="region-note">
                     Regional availability must be confirmed before purchasing.
@@ -1565,6 +1583,10 @@ export default function App() {
                         to save this order to it, or check out as a guest.
                       </p>
                     )}
+                    <p className="checkout-fineprint">
+                      Keys are emailed {SITE.deliveryTime}. Prices are in US dollars; any sales tax
+                      is shown before you pay, with no extra card fees. {SITE.disclaimer}
+                    </p>
                     <p className="checkout-fineprint">
                       Check each key’s activation region before you pay. By continuing you agree to
                       our <a href="/terms.html">terms</a> and{" "}

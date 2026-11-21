@@ -302,7 +302,7 @@ export function AuthPanel({
         </div>
         <ul className="account-facts">
           <li>Orders you place while signed in are saved to this account.</li>
-          <li>Your licence keys and receipts are emailed after payment.</li>
+          <li>Your license keys and receipts are emailed after payment.</li>
           <li>
             Need help with an order? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
           </li>

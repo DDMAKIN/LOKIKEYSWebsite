@@ -8,6 +8,9 @@ Email: `support@lokikeys.com` (subject line: "Security")
 
 Please include the page URL, what you found and how to reproduce it. We aim to reply within 3 working days.
 
+- Public policy: `/security.html` (Security & Trust page, safe-harbour rules for good-faith testing)
+- Machine-readable contact: `/.well-known/security.txt` (RFC 9116). Renew its `Expires` date every year.
+
 ## Customer accounts
 
 Accounts are Wix store members, so passwords, Google sign-in and the member records live with Wix, not in this code.
@@ -16,7 +19,7 @@ Accounts are Wix store members, so passwords, Google sign-in and the member reco
 |---|---|
 | **Continue with Google** | Wix runs the Google flow. We start it with OAuth 2.0 **PKCE** (S256) and a random `state`; the code comes back in the URL fragment, is checked against the stored `state`, swapped once for tokens and wiped from the address bar and history. |
 | **Email + password** | Our form calls Wix's Register / Login APIs. Wix stores and checks the password. Wrong email and wrong password show the same message, and password reset always says "sent", so the forms can't be used to find out who has an account. 5 wrong tries lock the form for 30 seconds on that device; Wix also rate-limits and filters abusive networks. |
-| **Mobile number (optional)** | Firebase sends the SMS code with invisible reCAPTCHA. `api/phone-signin.ts` only accepts a Firebase ID token after checking Google's signature, issuer, audience, that it is a *phone* sign-in, and that it is under 10 minutes old. It also checks the request comes from an allowed origin, caps body size and rate-limits per IP. The Wix API key it uses lives only in server environment variables. Each verified number maps to one member whose login email is a placeholder (`ph<number>@phone.lokikeys.com`) that can't be claimed with a password. |
+| **Mobile number (optional)** | Firebase sends the SMS code with invisible reCAPTCHA. `api/phone-signin.ts` only accepts a Firebase ID token after checking Google's signature, issuer, audience, that it is a *phone* sign-in, and that it is under 10 minutes old. It also checks the request comes from an allowed origin, caps body size, rate-limits per IP and per phone number, and accepts each verified token **once** (replays are refused). With `UPSTASH_REDIS_REST_*` set, limits and one-time use are shared across all server instances, and the endpoint **fails closed** (refuses sign-in) if that store is down. The Wix API key it uses lives only in server environment variables. Each verified number maps to one member whose login email is a placeholder (`ph<number>@phone.lokikeys.com`) that can't be claimed with a password. |
 
 Other rules the code follows:
 
@@ -28,9 +31,11 @@ Other rules the code follows:
 ## What this repo does to stay secure
 
 - HTTPS only, with HSTS (`vercel.json` / `public/_headers`).
+- **No third parties before consent**: fonts are bundled with the site; Google tag and Meta Pixel load only after the visitor agrees (`src/consent.tsx`), and a Global Privacy Control signal keeps ad cookies off.
 - **Content Security Policy**: scripts only from this site and Google reCAPTCHA; network calls only to this site, Wix's API and Google's sign-in services; no framing of the site (`frame-ancestors 'none'`); no plugins; forms only post to this site.
-- Also on every page: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`.
-- **CI** (`.github/workflows/ci.yml`) on every push and pull request: type-check, 22 tests (including the sign-in and phone-server security checks), build, and `pnpm audit` for known vulnerabilities in shipped packages.
+- Also on every page: `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy`, `X-Permitted-Cross-Domain-Policies`, `Origin-Agent-Cluster`.
+- GitHub Actions are pinned to exact commit SHAs, check out code without keeping the token (`persist-credentials: false`) and run with read-only permissions.
+- **CI** (`.github/workflows/ci.yml`) on every push and pull request: type-check, 24 tests (including the sign-in and phone-server security checks), build, and `pnpm audit` for known vulnerabilities in shipped packages.
 - **CodeQL** code scanning every push and weekly (`.github/workflows/codeql.yml`).
 - Every push is scanned for leaked secrets (`.github/workflows/secret-scan.yml`).
 - Dependabot opens pull requests for vulnerable npm packages and GitHub Actions (`.github/dependabot.yml`).

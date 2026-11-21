@@ -25,3 +25,8 @@ ul{padding-left:1.2rem}
 footer{border-top:1px solid var(--line);color:var(--mute);font-size:14px}
 footer div{max-width:860px;margin:0 auto;padding:24px 20px;display:flex;gap:18px;flex-wrap:wrap;justify-content:space-between}
 footer a{color:var(--mute)}
+.policy-table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px; }
+.policy-table th, .policy-table td { text-align: left; vertical-align: top; padding: 10px 12px; border: 1px solid #22406a; }
+.policy-table th { background: #0f1d33; color: #cfe2fb; font-weight: 600; }
+@media (max-width: 640px) { .policy-table { font-size: 13px; } .policy-table th, .policy-table td { padding: 8px; } }
+main h3 { font-size: 16px; margin: 18px 0 6px; color: #dce9fb; }

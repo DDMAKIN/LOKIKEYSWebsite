@@ -357,3 +357,41 @@ test("header sign-in opens the account dialog and checkout offers to save the or
   assert.equal(passwordProblem("12345678"), "Mix letters and numbers.");
   assert.equal(passwordProblem("loki2026keys"), null);
 });
+
+test("ad-safety: no unverifiable claims, reseller disclaimer and region on every card", () => {
+  const h = harness(),
+    App = h.load("src/App.tsx").default,
+    { SITE } = h.load("src/site.ts");
+  const tree = h.render(App);
+  const page = text(tree);
+  for (const banned of [
+    /genuine/i,
+    /instant/i,
+    /\bhack/i,
+    /real keys/i,
+    /cheapest/i,
+    /official store/i,
+    /licence/i,
+    /Save \d+%/,
+  ]) {
+    assert.ok(!banned.test(page), `page must not say ${banned}`);
+  }
+  assert.ok(page.includes(SITE.disclaimer), "independent-reseller disclaimer is on the page");
+  assert.match(SITE.disclaimer, /not affiliated/);
+  const lines = nodes(tree)
+    .filter((n) => n.props?.className === "delivery-line")
+    .map(text);
+  assert.ok(lines.length > 0);
+  for (const line of lines) assert.match(line, /Activates in .+· Email delivery/);
+  const hrefs = nodes(tree)
+    .map((n) => n.props?.href)
+    .filter(Boolean);
+  assert.ok(hrefs.includes("/security.html"), "footer links to the security page");
+});
+
+test("consent: no tracking tags or banner unless tag IDs are configured", () => {
+  const h = harness(),
+    consent = h.load("src/consent.tsx");
+  assert.equal(consent.trackingConfigured, false);
+  assert.equal(consent.ConsentBanner({ open: true, onClose() {} }), null);
+});

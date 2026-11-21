@@ -11,6 +11,9 @@
 //   WIX_SITE_ID           08e3d6d9-b449-4ad0-90b6-65a57df0c64d
 //   ALLOWED_ORIGINS       comma-separated, e.g. https://lokikeys.com,https://www.lokikeys.com
 // Optional: PHONE_LOGIN_EMAIL_DOMAIN (default phone.lokikeys.com)
+// Recommended in production: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN (free tier is
+// enough). With them, attempt limits and one-time token use are shared by every server instance;
+// without them they are kept per instance, in memory.
 import { createRemoteJWKSet, jwtVerify, type JWTVerifyGetKey } from "jose";
 
 const GOOGLE_JWKS =
@@ -29,14 +32,57 @@ const DIAL: Record<string, string> = {
 };
 const MAX_BODY = 8 * 1024;
 const WINDOW_MS = 10 * 60 * 1000;
-const MAX_PER_WINDOW = 10;
+const MAX_PER_WINDOW = 10; // per IP address
+const MAX_PER_PHONE = 5; // sign-ins per verified number per window
 
 type Env = Record<string, string | undefined>;
 type Deps = { env: Env; jwks?: JWTVerifyGetKey; fetchImpl?: typeof fetch; now?: () => number };
 
 export function createHandler({ env, jwks, fetchImpl = fetch, now = Date.now }: Deps) {
   const keys = jwks ?? createRemoteJWKSet(new URL(GOOGLE_JWKS));
-  const hits = new Map<string, number[]>(); // best-effort, per server instance
+  const hits = new Map<string, number[]>(); // fallback store, per server instance
+  const usedTokens = new Map<string, number>();
+
+  // Shared store (Upstash Redis REST) when configured, so limits survive restarts and scale-out.
+  async function redis(commands: (string | number)[][]): Promise<unknown[] | null> {
+    const url = env.UPSTASH_REDIS_REST_URL;
+    const token = env.UPSTASH_REDIS_REST_TOKEN;
+    if (!url || !token) return null;
+    const res = await fetchImpl(`${url.replace(/\/$/, "")}/pipeline`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify(commands),
+    });
+    if (!res.ok) throw new Error(`rate store ${res.status}`);
+    const out = (await res.json()) as { result?: unknown }[];
+    return out.map((r) => r.result);
+  }
+
+  /** Counts one attempt for `key`; true when the limit for the window is exceeded. */
+  async function overLimit(key: string, max: number): Promise<boolean> {
+    const shared = await redis([
+      ["INCR", `loki:rl:${key}`],
+      ["EXPIRE", `loki:rl:${key}`, Math.ceil(WINDOW_MS / 1000), "NX"],
+    ]);
+    if (shared) return Number(shared[0]) > max;
+    const t = now();
+    const recent = (hits.get(key) || []).filter((x) => t - x < WINDOW_MS);
+    recent.push(t);
+    hits.set(key, recent);
+    if (hits.size > 5000) hits.clear();
+    return recent.length > max;
+  }
+
+  /** Marks a verified token as used; false if it was already used (replay). */
+  async function firstUse(id: string): Promise<boolean> {
+    const shared = await redis([["SET", `loki:used:${id}`, "1", "NX", "EX", 1200]]);
+    if (shared) return shared[0] === "OK";
+    const t = now();
+    for (const [k, at] of usedTokens) if (t - at > 20 * 60 * 1000) usedTokens.delete(k);
+    if (usedTokens.has(id)) return false;
+    usedTokens.set(id, t);
+    return true;
+  }
 
   const reply = (status: number, body: object) =>
     new Response(JSON.stringify(body), {
@@ -47,15 +93,6 @@ export function createHandler({ env, jwks, fetchImpl = fetch, now = Date.now }: 
         "X-Content-Type-Options": "nosniff",
       },
     });
-
-  function limited(ip: string) {
-    const t = now();
-    const recent = (hits.get(ip) || []).filter((x) => t - x < WINDOW_MS);
-    recent.push(t);
-    hits.set(ip, recent);
-    if (hits.size > 5000) hits.clear();
-    return recent.length > MAX_PER_WINDOW;
-  }
 
   return async function POST(request: Request): Promise<Response> {
     const projectId = env.FIREBASE_PROJECT_ID;
@@ -71,7 +108,14 @@ export function createHandler({ env, jwks, fetchImpl = fetch, now = Date.now }: 
     if (!allowed.length || !allowed.includes(origin)) return reply(403, { error: "Not allowed." });
 
     const ip = (request.headers.get("x-forwarded-for") || "").split(",")[0].trim() || "unknown";
-    if (limited(ip)) return reply(429, { error: "Too many attempts. Please wait a few minutes." });
+    try {
+      if (await overLimit(`ip:${ip}`, MAX_PER_WINDOW)) {
+        return reply(429, { error: "Too many attempts. Please wait a few minutes." });
+      }
+    } catch (e) {
+      console.error("phone-signin: rate store unavailable", (e as Error).message);
+      return reply(503, { error: "Mobile sign-in is busy. Please try again in a minute." }); // fail closed
+    }
 
     if (!(request.headers.get("content-type") || "").includes("application/json")) {
       return reply(415, { error: "Bad request." });
@@ -89,6 +133,7 @@ export function createHandler({ env, jwks, fetchImpl = fetch, now = Date.now }: 
     }
 
     let phone: string;
+    let tokenId: string;
     try {
       const { payload } = await jwtVerify(body.idToken, keys, {
         issuer: `https://securetoken.google.com/${projectId}`,
@@ -103,8 +148,23 @@ export function createHandler({ env, jwks, fetchImpl = fetch, now = Date.now }: 
       if (!payload.sub || !authTime || now() - authTime > 10 * 60 * 1000) throw new Error("stale");
       phone = String(payload.phone_number || "");
       if (!/^\+[1-9]\d{6,14}$/.test(phone)) throw new Error("no phone");
+      tokenId = `${payload.sub}:${payload.iat}`;
     } catch {
       return reply(401, { error: "That code has expired. Please ask for a new one." });
+    }
+
+    try {
+      if (!(await firstUse(tokenId))) {
+        return reply(401, { error: "That code has already been used. Please ask for a new one." });
+      }
+      if (await overLimit(`phone:${phone}`, MAX_PER_PHONE)) {
+        return reply(429, {
+          error: "Too many sign-ins for this number. Please wait a few minutes.",
+        });
+      }
+    } catch (e) {
+      console.error("phone-signin: rate store unavailable", (e as Error).message);
+      return reply(503, { error: "Mobile sign-in is busy. Please try again in a minute." });
     }
 
     // One member per verified number. The login email is a placeholder that can only be

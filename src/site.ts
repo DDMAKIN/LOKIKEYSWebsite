@@ -6,7 +6,17 @@ export const SITE = {
   supportHours: "Monday to Saturday, 10 AM–7 PM IST",
   replyTime: "We usually reply the same working day.",
   country: "India",
+  // How long key delivery takes. Keep this to a promise you always meet: ad reviewers and
+  // customers hold you to it. Shown on the site, the delivery policy and checkout.
+  deliveryTime: "within 24 hours, usually much sooner",
+  // Business identity for Google Merchant Center / Meta verification. These must match your
+  // ad and merchant accounts exactly. Leave empty to hide; fill in before running ads.
+  legalName: "" as string,
+  address: "" as string,
+  phone: "" as string,
   url: "https://ditch-mess-23616146.figma.site",
+  disclaimer:
+    "LOKI KEYS is an independent reseller and is not affiliated with, endorsed by or sponsored by Norton, McAfee, Microsoft, Malwarebytes, Bitdefender or Watchdog. Product names and trademarks belong to their owners.",
 } as const;
 
 // Wix store that takes payment and fulfils orders. The client id is a public

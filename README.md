@@ -45,6 +45,10 @@ Wix doesn't offer phone-number login, so this uses Google Firebase to send and c
 4. Deploy this repo on **Vercel** (Figma Make hosting can't run the server function) and add the variables from `.env.example` in Vercel → Settings → Environment Variables: the four `VITE_FIREBASE_*` values, plus `FIREBASE_PROJECT_ID`, `WIX_API_KEY`, `WIX_SITE_ID` and `ALLOWED_ORIGINS` (your site address).
 5. Redeploy. The mobile-number button appears on the sign-in screen.
 
+## Before running ads
+
+Read `ADS-READINESS-CHECKLIST.md` first. In short: only authorised keys, fill in `legalName`, `address` and `phone` in `src/site.ts` (matching your Google and Meta business accounts), keep `deliveryTime` truthful, and add `VITE_GOOGLE_TAG_ID` / `VITE_META_PIXEL_ID` in Vercel's environment variables. The consent banner then appears by itself.
+
 ## Develop
 
 ```bash
