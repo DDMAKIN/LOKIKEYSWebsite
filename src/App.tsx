@@ -234,6 +234,23 @@ export default function App() {
   const [checkoutError, setCheckoutError] = useState("");
   const [member, setMember] = useState<Member | null>(null);
   const [toastAction, setToastAction] = useState<"bag" | "none">("bag");
+  const [scrolled, setScrolled] = useState(false);
+  const [footerInView, setFooterInView] = useState(false);
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const footer = document.querySelector(".footer");
+    const observer =
+      footer && "IntersectionObserver" in window
+        ? new IntersectionObserver(([entry]) => setFooterInView(entry.isIntersecting))
+        : null;
+    if (footer) observer?.observe(footer);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      observer?.disconnect();
+    };
+  }, []);
   const closeRef = useRef<HTMLButtonElement>(null);
   const overlay = cartOpen || selected !== null || info !== null;
   useEffect(
@@ -427,7 +444,7 @@ export default function App() {
           <Icon name="globe" size={13} /> USD $
         </span>
       </div>
-      <header className="header">
+      <header className={scrolled ? "header is-scrolled" : "header"}>
         <div className="container header-inner">
           <a className="logo" href="#" aria-label="LOKI KEYS home">
             <span className="logo-symbol">
@@ -771,6 +788,14 @@ export default function App() {
                     <div className="price">
                       {money(product.price)}
                       <span>USD</span>
+                      {product.listPrice && product.listPrice > product.price && (
+                        <span className="price-was">
+                          <s aria-label={`was ${money(product.listPrice)}`}>
+                            {money(product.listPrice)}
+                          </s>
+                          <b>Save {Math.round((1 - product.price / product.listPrice) * 100)}%</b>
+                        </span>
+                      )}
                     </div>
                     <button
                       className="add-button"
@@ -1082,7 +1107,8 @@ export default function App() {
 
       {!overlay && (
         <button
-          className={`rewards-launcher ${compareIds.length ? "above-comparison" : ""}`}
+          className={`rewards-launcher ${compareIds.length ? "above-comparison" : ""} ${footerInView ? "is-tucked" : ""}`}
+          tabIndex={footerInView ? -1 : 0}
           onClick={openRewards}
           aria-label={
             reward

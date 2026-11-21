@@ -67,7 +67,7 @@
   justify-content: center;
   align-items: center;
   gap: 17px;
-  font-size: 10px;
+  font-size: 12.5px;
   letter-spacing: 0.2px;
   position: relative;
 }
@@ -169,7 +169,7 @@
   display: flex;
   gap: 9px;
   align-items: center;
-  font-size: 11px;
+  font-size: 13px;
 }
 .bag-button b {
   width: 20px;
@@ -178,7 +178,7 @@
   place-items: center;
   background: #edf1e7;
   border-radius: 50%;
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 600;
 }
 .mobile-menu {
@@ -201,7 +201,7 @@
   padding-block: 51px 42px;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 650;
   letter-spacing: 1.6px;
   color: #4d6b52;
@@ -212,7 +212,7 @@
 }
 .hero .eyebrow {
   letter-spacing: 1.6px;
-  font-size: 9px;
+  font-size: 12px;
 }
 .hero .eyebrow > span {
   width: 6px;
@@ -261,7 +261,7 @@ h1 > span:first-of-type {
   align-items: center;
   justify-content: center;
   gap: 25px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
   transition:
     background 0.2s,
@@ -282,7 +282,7 @@ h1 > span:first-of-type {
   display: inline-flex;
   align-items: center;
   gap: 11px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 550;
 }
 .text-button:hover {
@@ -301,7 +301,7 @@ h1 > span:first-of-type {
   align-items: center;
   gap: 14px;
   color: #677361;
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 28px;
 }
 .hero-assurance > span {
@@ -396,7 +396,7 @@ h1 > span:first-of-type {
   gap: 30px;
 }
 .brand-strip-label {
-  font-size: 8px;
+  font-size: 11.5px;
   line-height: 1.8;
   letter-spacing: 1.4px;
   color: #899084;
@@ -517,7 +517,7 @@ h2 {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  font-size: 10px;
+  font-size: 12.5px;
   padding: 10px 15px;
   border: 1px solid transparent;
   border-radius: 5px;
@@ -547,7 +547,7 @@ h2 {
   outline: none;
   width: 100%;
   min-width: 0;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #354336;
   background: transparent;
 }
@@ -566,7 +566,7 @@ h2 {
   justify-content: space-between;
   align-items: center;
   padding: 17px 0;
-  font-size: 9px;
+  font-size: 12px;
   color: #8a9084;
 }
 .results-bar label {
@@ -575,7 +575,7 @@ h2 {
   gap: 3px;
 }
 .results-bar select {
-  font-size: 9px;
+  font-size: 12px;
   color: #434e3e;
   background: none;
   max-width: 135px;
@@ -628,7 +628,7 @@ h2 {
   top: 13px;
   background: #ffffffc9;
   color: #6d725f;
-  font-size: 7px;
+  font-size: 10.5px;
   font-weight: 550;
   letter-spacing: 0.7px;
   padding: 5px 7px;
@@ -821,7 +821,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 8px;
+  font-size: 11.5px;
   color: #525e4c;
   opacity: 0;
   transition: opacity 0.2s;
@@ -834,7 +834,7 @@ h2 {
   padding: 18px 17px 13px;
 }
 .product-type {
-  font-size: 8px;
+  font-size: 11.5px;
   color: #898f80;
 }
 .product-title {
@@ -849,7 +849,7 @@ h2 {
   color: #52754a;
 }
 .product-meta {
-  font-size: 9px;
+  font-size: 12px;
   color: #858b80;
   display: flex;
   gap: 7px;
@@ -873,7 +873,7 @@ h2 {
 }
 .price > span {
   font-family: "DM Sans", sans-serif;
-  font-size: 7px;
+  font-size: 10.5px;
   margin-left: 5px;
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -902,7 +902,7 @@ h2 {
   gap: 5px;
   border-top: 1px solid #eff0eb;
   padding-top: 10px;
-  font-size: 8px;
+  font-size: 11.5px;
   color: #8b9184;
 }
 .delivery-line > span:first-child {
@@ -927,7 +927,7 @@ h2 {
   display: flex;
   width: fit-content;
   min-height: 40px;
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .empty-results {
   text-align: center;
@@ -971,13 +971,13 @@ h2 {
   margin-bottom: 12px;
 }
 .benefit h3 {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 650;
   letter-spacing: -0.15px;
 }
 .benefit p {
   color: #858c7c;
-  font-size: 10px;
+  font-size: 12.5px;
   line-height: 1.8;
   max-width: 220px;
   margin-top: 8px;
@@ -1002,7 +1002,7 @@ h2 {
   background: #eeedf5;
 }
 .collection-card .eyebrow {
-  font-size: 8px;
+  font-size: 11.5px;
   letter-spacing: 1.3px;
   position: relative;
   z-index: 1;
@@ -1018,7 +1018,7 @@ h2 {
   z-index: 1;
 }
 .collection-card p {
-  font-size: 10px;
+  font-size: 12.5px;
   margin-top: 12px;
   color: #7e8976;
   position: relative;
@@ -1031,7 +1031,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 14px;
-  font-size: 10px;
+  font-size: 12.5px;
   margin-top: 24px;
   font-weight: 550;
   position: relative;
@@ -1099,7 +1099,7 @@ h2 {
 .how-heading > p {
   color: #858b7e;
   margin-top: 13px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .how-heading .text-button {
   margin-top: 20px;
@@ -1112,7 +1112,7 @@ h2 {
 }
 .step-number {
   display: block;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #9da593;
   margin-bottom: 32px;
   position: relative;
@@ -1131,11 +1131,11 @@ h2 {
   margin-bottom: 15px;
 }
 .step h3 {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 650;
 }
 .step p {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #858c7d;
   line-height: 1.9;
   margin-top: 9px;
@@ -1147,7 +1147,7 @@ h2 {
   gap: 60px;
 }
 .faq-heading .eyebrow {
-  font-size: 8px;
+  font-size: 11.5px;
 }
 .faq-heading h2 {
   margin-top: 15px;
@@ -1155,7 +1155,7 @@ h2 {
 }
 .faq-heading > p {
   margin-top: 15px;
-  font-size: 11px;
+  font-size: 13px;
   color: #858d7e;
   line-height: 1.9;
 }
@@ -1187,7 +1187,7 @@ h2 {
   flex-shrink: 0;
 }
 .faq-item > p {
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.9;
   color: #818a77;
   padding: 0 40px 22px 0;
@@ -1212,12 +1212,12 @@ h2 {
 }
 .footer-brand > p {
   color: #7a8570;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.9;
   margin-top: 17px;
 }
 .footer-tag {
-  font-size: 8px;
+  font-size: 11.5px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1226,14 +1226,14 @@ h2 {
 }
 .footer-links h3 {
   font-family: "DM Sans", sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
   margin-bottom: 18px;
 }
 .footer-links > button,
 .footer-links > a {
   display: block;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #7e8974;
   margin-top: 12px;
 }
@@ -1255,7 +1255,7 @@ h2 {
   color: #445d38;
 }
 .footer-note > p {
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.9;
   color: #8b9580;
   margin-top: 11px;
@@ -1266,7 +1266,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   color: #8a9480;
-  font-size: 8px;
+  font-size: 11.5px;
   gap: 20px;
 }
 .footer-bottom > div {
@@ -1452,7 +1452,7 @@ h2 {
   font-weight: 600;
 }
 .cart-item p {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #849079;
   margin-top: 7px;
 }
@@ -1467,7 +1467,7 @@ h2 {
   align-items: center;
   gap: 13px;
   margin-top: 13px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .quantity > button:not(.remove-item) {
   border: 1px solid #e0e6d7;
@@ -1480,7 +1480,7 @@ h2 {
 .quantity .remove-item {
   margin-left: auto;
   color: #8f9589;
-  font-size: 9px;
+  font-size: 12px;
   text-decoration: underline;
 }
 .cart-summary {
@@ -1498,13 +1498,13 @@ h2 {
   font-weight: 600;
 }
 .cart-summary small {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 400;
   color: #849077;
 }
 .cart-summary > p {
   color: #8b947f;
-  font-size: 10px;
+  font-size: 12.5px;
   margin-top: 9px;
 }
 .cart-summary .button {
@@ -1515,7 +1515,7 @@ h2 {
 .cart-preview-note {
   display: block;
   text-align: center;
-  font-size: 9px;
+  font-size: 12px;
   color: #8b9480;
   margin-top: 12px;
 }
@@ -1560,7 +1560,7 @@ h2 {
 }
 .detail-specs {
   margin-top: 22px;
-  font-size: 11px;
+  font-size: 13px;
 }
 .detail-specs > div {
   display: grid;
@@ -1576,7 +1576,7 @@ h2 {
   text-align: right;
 }
 .region-note {
-  font-size: 10px;
+  font-size: 12.5px;
   background: #faf4e6;
   padding: 12px;
   border-radius: 4px;
@@ -1595,7 +1595,7 @@ h2 {
   font-weight: 600;
 }
 .detail-buy small {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 400;
   color: #829173;
   letter-spacing: 0;
@@ -1661,7 +1661,7 @@ h2 {
   }
   .main-nav {
     gap: 20px;
-    font-size: 11px;
+    font-size: 13px;
   }
   .header-actions {
     gap: 12px;
@@ -1701,15 +1701,15 @@ h2 {
     font-size: 17px;
   }
   .watchdog-partner {
-    font-size: 11px;
+    font-size: 13px;
   }
   .brand-strip-label {
-    font-size: 7px;
+    font-size: 10.5px;
     padding-right: 15px;
   }
   .category-tab {
     padding: 9px 11px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .search-field {
     width: 200px;
@@ -1724,25 +1724,25 @@ h2 {
     padding: 15px 12px 12px;
   }
   .product-title {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .price {
     font-size: 22px;
   }
   .product-meta {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .delivery-line {
-    font-size: 7px;
+    font-size: 10.5px;
   }
   .benefit {
     padding-inline: 18px;
   }
   .benefit h3 {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .benefit p {
-    font-size: 9px;
+    font-size: 12px;
   }
   .collection-card {
     padding: 25px;
@@ -1751,7 +1751,7 @@ h2 {
     font-size: 27px;
   }
   .collection-card p {
-    font-size: 9px;
+    font-size: 12px;
   }
   .shield-art {
     right: 13px;
@@ -1794,7 +1794,7 @@ h2 {
   }
   .main-nav {
     gap: 16px;
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .header-search,
   .header-divider {
@@ -1808,7 +1808,7 @@ h2 {
   }
   .announcement {
     padding-inline: 20px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .announcement .announcement-right {
     right: 20px;
@@ -1824,11 +1824,11 @@ h2 {
     letter-spacing: -2.4px;
   }
   .hero .eyebrow {
-    font-size: 7px;
+    font-size: 10.5px;
     letter-spacing: 1.1px;
   }
   .hero-copy > p {
-    font-size: 11px;
+    font-size: 13px;
   }
   .hero-actions {
     gap: 17px;
@@ -1836,15 +1836,15 @@ h2 {
   .hero-actions .button {
     padding-inline: 16px;
     gap: 17px;
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .hero-actions .text-button {
-    font-size: 10px;
+    font-size: 12.5px;
     gap: 7px;
   }
   .hero-assurance {
     gap: 9px;
-    font-size: 7px;
+    font-size: 10.5px;
   }
   .hero-visual {
     min-height: 450px;
@@ -1899,7 +1899,7 @@ h2 {
     gap: 5px;
   }
   .brand-strip-label {
-    font-size: 6px;
+    font-size: 10px;
     letter-spacing: 0.8px;
     padding-right: 10px;
   }
@@ -1934,14 +1934,14 @@ h2 {
     font-size: 27px;
   }
   .section-heading .eyebrow {
-    font-size: 8px;
+    font-size: 11.5px;
     letter-spacing: 1.3px;
   }
   .section-heading p {
-    font-size: 11px;
+    font-size: 13px;
   }
   .view-all-top {
-    font-size: 9px;
+    font-size: 12px;
   }
   .shop-toolbar {
     gap: 12px;
@@ -1950,7 +1950,7 @@ h2 {
   .category-tab {
     padding-inline: 9px;
     gap: 5px;
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .category-tab svg {
     width: 13px;
@@ -1960,7 +1960,7 @@ h2 {
     padding-inline: 9px;
   }
   .search-field input {
-    font-size: 9px;
+    font-size: 12px;
   }
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1980,10 +1980,10 @@ h2 {
     font-size: 13px;
   }
   .product-meta {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .delivery-line {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .price {
     font-size: 25px;
@@ -2005,7 +2005,7 @@ h2 {
     font-size: 12px;
   }
   .benefit p {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .collections {
     gap: 17px;
@@ -2015,7 +2015,7 @@ h2 {
     padding: 25px 20px;
   }
   .collection-card .eyebrow {
-    font-size: 6px;
+    font-size: 10px;
   }
   .collection-card h2 {
     font-size: 25px;
@@ -2065,7 +2065,7 @@ h2 {
     font-size: 12px;
   }
   .step p {
-    font-size: 11px;
+    font-size: 13px;
   }
   .step-number {
     margin-bottom: 23px;
@@ -2076,18 +2076,18 @@ h2 {
     padding-block: 55px;
   }
   .faq-heading .eyebrow {
-    font-size: 6px;
+    font-size: 10px;
     letter-spacing: 1px;
   }
   .faq-heading h2 {
     font-size: 26px;
   }
   .faq-item > button {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.7;
   }
   .faq-item > p {
-    font-size: 10px;
+    font-size: 12.5px;
     padding-right: 20px;
   }
   .footer-top {
@@ -2104,7 +2104,7 @@ h2 {
   }
   .announcement {
     gap: 8px;
-    font-size: 8px;
+    font-size: 11.5px;
     min-height: 30px;
     padding-inline: 12px;
   }
@@ -2163,7 +2163,7 @@ h2 {
     padding-bottom: 0;
   }
   .hero .eyebrow {
-    font-size: 8px;
+    font-size: 11.5px;
     letter-spacing: 1.5px;
   }
   h1 {
@@ -2184,7 +2184,7 @@ h2 {
     margin-left: 12px;
   }
   .hero-copy > p {
-    font-size: 11px;
+    font-size: 13px;
     margin-top: 19px;
     line-height: 1.9;
   }
@@ -2193,16 +2193,16 @@ h2 {
     gap: 25px;
   }
   .hero-actions .button {
-    font-size: 11px;
+    font-size: 13px;
     min-height: 45px;
     padding-inline: 19px;
     gap: 20px;
   }
   .hero-actions .text-button {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .hero-assurance {
-    font-size: 8px;
+    font-size: 11.5px;
     margin-top: 23px;
     gap: 14px;
   }
@@ -2269,7 +2269,7 @@ h2 {
   }
   .brand-strip .watchdog-partner {
     display: flex;
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .watchdog-partner svg {
     width: 20px;
@@ -2282,7 +2282,7 @@ h2 {
     align-items: flex-start;
   }
   .section-heading .eyebrow {
-    font-size: 7px;
+    font-size: 10.5px;
     letter-spacing: 1.15px;
   }
   .section-heading h2 {
@@ -2291,7 +2291,7 @@ h2 {
     margin-top: 8px;
   }
   .section-heading p {
-    font-size: 10px;
+    font-size: 12.5px;
     margin-top: 9px;
   }
   .view-all-top {
@@ -2310,7 +2310,7 @@ h2 {
   }
   .category-tab {
     gap: 5px;
-    font-size: 8px;
+    font-size: 11.5px;
     padding: 9px 8px;
   }
   .category-tab svg {
@@ -2322,14 +2322,14 @@ h2 {
     padding: 10px 12px;
   }
   .search-field input {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .results-bar {
-    font-size: 8px;
+    font-size: 11.5px;
     padding-block: 15px;
   }
   .results-bar select {
-    font-size: 8px;
+    font-size: 11.5px;
     max-width: 120px;
   }
   .product-grid {
@@ -2340,7 +2340,7 @@ h2 {
     height: 194px;
   }
   .product-badge {
-    font-size: 5px;
+    font-size: 9.5px;
     padding: 4px 5px;
     left: 8px;
     top: 9px;
@@ -2425,22 +2425,22 @@ h2 {
     height: 36px;
   }
   .quick-view {
-    font-size: 6px;
+    font-size: 10px;
     bottom: 6px;
   }
   .product-content {
     padding: 13px 11px 10px;
   }
   .product-type {
-    font-size: 7px;
+    font-size: 10.5px;
   }
   .product-title {
-    font-size: 10px;
+    font-size: 12.5px;
     margin-top: 6px;
     min-height: 30px;
   }
   .product-meta {
-    font-size: 8px;
+    font-size: 11.5px;
     gap: 4px;
     margin-top: 5px;
   }
@@ -2452,7 +2452,7 @@ h2 {
     font-size: 22px;
   }
   .price > span {
-    font-size: 6px;
+    font-size: 10px;
     margin-left: 3px;
   }
   .add-button {
@@ -2463,7 +2463,7 @@ h2 {
     width: 17px;
   }
   .delivery-line {
-    font-size: 6px;
+    font-size: 10px;
     padding-top: 9px;
     gap: 3px;
   }
@@ -2472,7 +2472,7 @@ h2 {
   }
   .explore-button {
     margin-top: 22px;
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .benefits {
     margin-bottom: 33px;
@@ -2483,10 +2483,10 @@ h2 {
     padding-inline: 17px;
   }
   .benefit h3 {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .benefit p {
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.85;
   }
   .benefit-icon {
@@ -2504,7 +2504,7 @@ h2 {
     padding: 25px;
   }
   .collection-card .eyebrow {
-    font-size: 7px;
+    font-size: 10.5px;
   }
   .collection-card h2 {
     margin-top: 16px;
@@ -2512,11 +2512,11 @@ h2 {
   }
   .collection-card p {
     max-width: 235px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .collection-link {
     bottom: 25px;
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .shield-art {
     right: 22px;
@@ -2542,7 +2542,7 @@ h2 {
     gap: 28px;
   }
   .how-heading .eyebrow {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .how-heading h2 {
     font-size: 26px;
@@ -2552,10 +2552,10 @@ h2 {
     display: block;
   }
   .how-heading > p {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .how-heading .text-button {
-    font-size: 10px;
+    font-size: 12.5px;
     margin-top: 17px;
   }
   .steps {
@@ -2578,7 +2578,7 @@ h2 {
     place-items: center;
     flex-shrink: 0;
     color: #6b8459;
-    font-size: 9px;
+    font-size: 12px;
   }
   .step-number::after {
     display: none;
@@ -2597,7 +2597,7 @@ h2 {
     font-size: 12px;
   }
   .step p {
-    font-size: 10px;
+    font-size: 12.5px;
     margin-top: 7px;
     max-width: 240px;
   }
@@ -2607,7 +2607,7 @@ h2 {
     padding-block: 39px 43px;
   }
   .faq-heading .eyebrow {
-    font-size: 7px;
+    font-size: 10.5px;
   }
   .faq-heading h2 {
     font-size: 27px;
@@ -2617,7 +2617,7 @@ h2 {
     display: none;
   }
   .faq-heading > p {
-    font-size: 10px;
+    font-size: 12.5px;
     margin-top: 11px;
   }
   .faq-heading > p > br {
@@ -2628,10 +2628,10 @@ h2 {
   }
   .faq-item > button {
     padding-block: 18px;
-    font-size: 11px;
+    font-size: 13px;
   }
   .faq-item > p {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .footer-top {
     grid-template-columns: 1fr 1fr;
@@ -2643,24 +2643,24 @@ h2 {
   }
   .footer-brand > p {
     margin-top: 12px;
-    font-size: 11px;
+    font-size: 13px;
   }
   .footer-tag {
     margin-top: 13px;
   }
   .footer-links h3 {
-    font-size: 11px;
+    font-size: 13px;
     margin-bottom: 16px;
   }
   .footer-links > button,
   .footer-links > a {
-    font-size: 10px;
+    font-size: 12.5px;
     margin-top: 12px;
   }
   .footer-bottom {
     flex-direction: column;
     gap: 17px;
-    font-size: 8px;
+    font-size: 11.5px;
     padding-block: 20px;
   }
   .footer-bottom > div {
@@ -2671,7 +2671,7 @@ h2 {
   }
   .toast {
     bottom: 16px;
-    font-size: 10px;
+    font-size: 12.5px;
     padding: 12px;
     gap: 7px;
   }
@@ -2681,7 +2681,7 @@ h2 {
   }
   .toast > button {
     margin-left: 2px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .modal {
     padding: 33px 23px;
@@ -2714,10 +2714,10 @@ h2 {
     font-size: 25px;
   }
   .detail-specs {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .guide-list {
-    font-size: 11px;
+    font-size: 13px;
   }
 }
 .discovery-bar {
@@ -2731,7 +2731,7 @@ h2 {
   display: flex;
   align-items: center;
   gap: 9px;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #78856c;
 }
 .device-filter select {
@@ -2739,7 +2739,7 @@ h2 {
   background: #f3f6ee;
   padding: 8px 10px;
   border-radius: 4px;
-  font-size: 10px;
+  font-size: 12.5px;
   max-width: 115px;
 }
 .budget-filter {
@@ -2748,7 +2748,7 @@ h2 {
   gap: 13px;
   flex: 1;
   max-width: 300px;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #78856c;
 }
 .budget-filter > span {
@@ -2773,7 +2773,7 @@ h2 {
   gap: 9px;
   align-items: center;
   margin-left: auto;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #4e6e42;
 }
 .finder-shortcut:hover {
@@ -2786,14 +2786,14 @@ h2 {
   margin-right: auto;
   margin-left: 14px;
   color: #577149;
-  font-size: 9px;
+  font-size: 12px;
   text-decoration: underline;
 }
 .compare-check {
   display: flex;
   gap: 7px;
   align-items: center;
-  font-size: 9px;
+  font-size: 12px;
   color: #8a927f;
   cursor: pointer;
   border-top: 1px solid #eff0eb;
@@ -2853,12 +2853,12 @@ h2 {
 }
 .compare-tray-heading strong > span {
   color: #91a284;
-  font-size: 10px;
+  font-size: 12.5px;
   margin-left: 5px;
 }
 .compare-tray-heading small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: #8b977e;
   margin-top: 4px;
 }
@@ -2876,14 +2876,14 @@ h2 {
   align-items: center;
   gap: 6px;
   padding: 6px 7px;
-  font-size: 9px;
+  font-size: 12px;
   color: #6d7e60;
 }
 .compare-chips button:hover {
   background: #e6eddd;
 }
 .tray-clear {
-  font-size: 9px;
+  font-size: 12px;
   color: #8c9782;
   text-decoration: underline;
 }
@@ -2952,7 +2952,7 @@ body:has(.compare-tray) .footer {
   min-height: 36px;
 }
 .comparison-label {
-  font-size: 8px;
+  font-size: 11.5px;
   letter-spacing: 1px;
   color: #7d8e6d;
   font-weight: 500;
@@ -2976,26 +2976,26 @@ body:has(.compare-tray) .footer {
   margin-top: 12px;
 }
 .comparison-price small {
-  font-size: 8px;
+  font-size: 11.5px;
   font-weight: 400;
   color: #8a957d;
   letter-spacing: 0;
 }
 .comparison-scroll tbody th {
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 500;
   color: #7d8a70;
   background: #fafbf7;
 }
 .comparison-scroll td {
-  font-size: 11px;
+  font-size: 13px;
   color: #586d49;
   line-height: 1.8;
 }
 .comparison-scroll .button {
   padding: 10px 12px;
   min-height: 38px;
-  font-size: 10px;
+  font-size: 12.5px;
   width: 100%;
 }
 .finder-progress {
@@ -3015,7 +3015,7 @@ body:has(.compare-tray) .footer {
   background: #789564;
 }
 .finder-step {
-  font-size: 8px;
+  font-size: 11.5px;
   letter-spacing: 1.3px;
   color: #8b997d;
 }
@@ -3067,7 +3067,7 @@ body:has(.compare-tray) .footer {
 }
 .finder-options small {
   display: block;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #89967b;
   margin-top: 6px;
 }
@@ -3104,7 +3104,7 @@ body:has(.compare-tray) .footer {
 }
 .finder-matches small {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   color: #899b7b;
 }
 .finder-matches strong {
@@ -3114,7 +3114,7 @@ body:has(.compare-tray) .footer {
   margin-top: 4px;
 }
 .finder-matches div > span {
-  font-size: 9px;
+  font-size: 12px;
   color: #8a957d;
   margin-top: 6px;
   display: block;
@@ -3128,7 +3128,7 @@ body:has(.compare-tray) .footer {
 }
 .finder-matches b > span {
   display: block;
-  font-size: 8px;
+  font-size: 11.5px;
   color: #7b9068;
   font-weight: 400;
   margin-top: 6px;
@@ -3138,7 +3138,7 @@ body:has(.compare-tray) .footer {
   background: #f5f7ef;
   border-radius: 5px;
   padding: 13px;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #899479;
   line-height: 1.9;
   margin-top: 20px;
@@ -3181,22 +3181,22 @@ body:has(.compare-tray) .footer {
     padding-block: 16px;
   }
   .device-filter {
-    font-size: 9px;
+    font-size: 12px;
     gap: 5px;
   }
   .device-filter > svg {
     display: none;
   }
   .device-filter select {
-    font-size: 9px;
+    font-size: 12px;
     max-width: 100px;
   }
   .budget-filter {
     gap: 10px;
-    font-size: 9px;
+    font-size: 12px;
   }
   .finder-shortcut {
-    font-size: 10px;
+    font-size: 12.5px;
     width: 100%;
     padding-top: 12px;
     border-top: 1px dashed #dfe7d5;
@@ -3210,13 +3210,13 @@ body:has(.compare-tray) .footer {
   }
   .results-bar .reset-filter {
     margin-left: 0;
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .results-bar > label {
     margin-left: auto;
   }
   .compare-check {
-    font-size: 8px;
+    font-size: 11.5px;
     gap: 5px;
     padding-top: 10px;
   }
@@ -3237,19 +3237,19 @@ body:has(.compare-tray) .footer {
     display: none;
   }
   .compare-tray-heading strong {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .compare-tray-heading small {
-    font-size: 7px;
+    font-size: 10.5px;
   }
   .compare-tray > .button {
-    font-size: 9px;
+    font-size: 12px;
     gap: 7px;
     padding: 10px;
     min-height: 36px;
   }
   .tray-clear {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .toast {
     top: 115px;
@@ -3282,14 +3282,14 @@ body:has(.compare-tray) .footer {
     font-size: 12px;
   }
   .finder-options small {
-    font-size: 9px;
+    font-size: 12px;
   }
   .finder-matches > button {
     padding: 14px 11px;
     gap: 10px;
   }
   .finder-matches strong {
-    font-size: 11px;
+    font-size: 13px;
   }
   .finder-matches b {
     font-size: 18px;
@@ -3337,7 +3337,7 @@ body:has(.compare-tray) .footer {
   transform: rotate(110deg);
 }
 .lucky-banner .eyebrow {
-  font-size: 7px;
+  font-size: 10.5px;
   letter-spacing: 1.5px;
 }
 .lucky-banner h2 {
@@ -3346,7 +3346,7 @@ body:has(.compare-tray) .footer {
   margin-top: 5px;
 }
 .lucky-banner p {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #8b967e;
   margin-top: 8px;
 }
@@ -3395,13 +3395,13 @@ body:has(.compare-tray) .footer {
 }
 .rewards-launcher small {
   display: block;
-  font-size: 6px;
+  font-size: 10px;
   letter-spacing: 1.3px;
   color: #bacba7;
 }
 .rewards-launcher strong {
   display: block;
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 500;
   margin-top: 4px;
 }
@@ -3560,7 +3560,7 @@ body:has(.compare-tray) .footer {
   justify-content: center;
 }
 .wheel-copy .eyebrow {
-  font-size: 8px;
+  font-size: 11.5px;
   letter-spacing: 1.7px;
 }
 .wheel-copy h2 {
@@ -3590,7 +3590,7 @@ body:has(.compare-tray) .footer {
 }
 .wheel-reassurance {
   text-align: center;
-  font-size: 8px;
+  font-size: 11.5px;
   color: #88977a;
   line-height: 1.8;
   margin-top: 13px;
@@ -3604,7 +3604,7 @@ body:has(.compare-tray) .footer {
 }
 .wheel-terms {
   margin-top: 23px;
-  font-size: 9px;
+  font-size: 12px;
   color: #8b987e;
 }
 .wheel-terms summary {
@@ -3614,7 +3614,7 @@ body:has(.compare-tray) .footer {
   width: fit-content;
 }
 .wheel-terms p {
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.9;
   margin-top: 9px;
 }
@@ -3679,7 +3679,7 @@ body:has(.compare-tray) .footer {
   background: #e6ce8d;
 }
 .cart-reward-link {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #67834f;
   display: flex;
   justify-content: space-between;
@@ -3692,7 +3692,7 @@ body:has(.compare-tray) .footer {
 }
 .cart-summary > .discount-row {
   margin-top: 18px;
-  font-size: 11px;
+  font-size: 13px;
   color: #64844c;
   align-items: center;
 }
@@ -3702,7 +3702,7 @@ body:has(.compare-tray) .footer {
 }
 .discount-row button {
   text-decoration: underline;
-  font-size: 8px;
+  font-size: 11.5px;
   color: #8d9a7e;
   display: block;
   margin-top: 5px;
@@ -3720,7 +3720,7 @@ body:has(.compare-tray) .footer {
   background: #f2f6e9;
   border-radius: 4px;
   text-align: center;
-  font-size: 11px !important;
+  font-size: 13px !important;
 }
 .recent-section {
   padding-bottom: 45px;
@@ -3733,14 +3733,14 @@ body:has(.compare-tray) .footer {
   margin-bottom: 21px;
 }
 .recent-heading .eyebrow {
-  font-size: 7px;
+  font-size: 10.5px;
 }
 .recent-heading h2 {
   font-size: 24px;
   margin-top: 7px;
 }
 .recent-heading > button {
-  font-size: 9px;
+  font-size: 12px;
   color: #89977b;
   text-decoration: underline;
 }
@@ -3785,12 +3785,12 @@ body:has(.compare-tray) .footer {
 }
 .recent-product strong {
   display: block;
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 550;
 }
 .recent-product small {
   display: block;
-  font-size: 7px;
+  font-size: 10.5px;
   color: #8b977f;
   margin-top: 5px;
 }
@@ -3802,7 +3802,7 @@ body:has(.compare-tray) .footer {
   color: #547047;
 }
 .recent-product b > span {
-  font-size: 6px;
+  font-size: 10px;
   font-weight: 400;
   display: block;
   margin-top: 3px;
@@ -3835,14 +3835,14 @@ body:has(.compare-tray) .footer {
     max-width: 320px;
   }
   .lucky-banner p {
-    font-size: 9px;
+    font-size: 12px;
     max-width: 300px;
     line-height: 1.9;
   }
   .lucky-banner > .button {
     padding-inline: 15px;
     gap: 14px;
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .lucky-banner-symbol {
     width: 45px;
@@ -3872,7 +3872,7 @@ body:has(.compare-tray) .footer {
     font-size: 28px;
   }
   .wheel-status p {
-    font-size: 11px;
+    font-size: 13px;
   }
   .recent-products {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3880,7 +3880,7 @@ body:has(.compare-tray) .footer {
 }
 @media (max-width: 600px) {
   .announcement {
-    font-size: 7px;
+    font-size: 10.5px;
     gap: 8px;
   }
   .announcement-spin {
@@ -3906,7 +3906,7 @@ body:has(.compare-tray) .footer {
     line-height: 1.5;
   }
   .lucky-banner p {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .lucky-banner > .button {
     margin-left: 0;
@@ -3929,10 +3929,10 @@ body:has(.compare-tray) .footer {
     font-size: 26px;
   }
   .rewards-launcher small {
-    font-size: 5px;
+    font-size: 9.5px;
   }
   .rewards-launcher strong {
-    font-size: 9px;
+    font-size: 12px;
   }
   .rewards-launcher > svg {
     width: 13px;
@@ -4017,25 +4017,25 @@ body:has(.compare-tray) .footer {
     margin-top: 11px;
   }
   .wheel-copy .eyebrow {
-    font-size: 7px;
+    font-size: 10.5px;
   }
   .wheel-status p {
-    font-size: 11px;
+    font-size: 13px;
     margin-top: 12px;
     min-height: auto;
   }
   .wheel-cta {
     margin-top: 19px;
     min-height: 44px;
-    font-size: 11px;
+    font-size: 13px;
   }
   .wheel-reassurance {
-    font-size: 7px;
+    font-size: 10.5px;
     margin-top: 10px;
   }
   .wheel-terms {
     margin-top: 17px;
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .wheel-preview {
     font-size: 6px;
@@ -4062,14 +4062,14 @@ body:has(.compare-tray) .footer {
     height: 46px;
   }
   .recent-product strong {
-    font-size: 8px;
+    font-size: 11.5px;
     line-height: 1.6;
   }
   .recent-product small {
-    font-size: 6px;
+    font-size: 10px;
   }
   .recent-product b {
-    font-size: 11px;
+    font-size: 13px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
