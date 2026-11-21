@@ -6,6 +6,7 @@ import { SITE } from "./site";
 import { startCheckout } from "./wixCheckout";
 import { AuthPanel } from "./AuthPanel";
 import { completeSignInFromUrl, getMyMember, type Member } from "./auth";
+import { QuickSearch } from "./QuickSearch";
 import { ConsentBanner, applyChoice, readChoice, trackingConfigured } from "./consent";
 import {
   RewardWheel,
@@ -237,6 +238,39 @@ export default function App() {
   const [toastAction, setToastAction] = useState<"bag" | "none">("bag");
   const [scrolled, setScrolled] = useState(false);
   const [consentOpen, setConsentOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [bagBump, setBagBump] = useState(0);
+  // "/" or Ctrl/Cmd+K opens quick search from anywhere (except while typing in a field).
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const typing = (e.target as HTMLElement | null)?.closest?.(
+        "input, textarea, select, [contenteditable]",
+      );
+      if ((e.key === "k" && (e.metaKey || e.ctrlKey)) || (e.key === "/" && !typing)) {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+  // Sections fade in as they scroll into view (CSS only animates when FX is on).
+  useEffect(() => {
+    if (!("IntersectionObserver" in window)) return;
+    document.documentElement.classList.add("can-reveal");
+    const io = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            io.unobserve(entry.target);
+          }
+        }),
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+    document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
   useEffect(() => {
     if (!trackingConfigured) return;
     const choice = readChoice();
@@ -384,6 +418,7 @@ export default function App() {
     setCart((current) => ({ ...current, [product.id]: (current[product.id] || 0) + 1 }));
     setToastAction("bag");
     setToast(`${product.name} added to your bag`);
+    setBagBump((n) => n + 1);
   };
   const changeQuantity = (id: number, amount: number) =>
     setCart((current) => {
@@ -484,10 +519,8 @@ export default function App() {
             <button
               className="icon-button header-search"
               aria-label="Search software"
-              onClick={() => {
-                goToShop();
-                document.getElementById("product-search")?.focus();
-              }}
+              title="Search (press /)"
+              onClick={() => setSearchOpen(true)}
             >
               <Icon name="search" />
             </button>
@@ -509,7 +542,11 @@ export default function App() {
               <span>{member ? member.name.split(" ")[0] || "Account" : "Sign in"}</span>
             </button>
             <span className="header-divider" />
-            <button className="bag-button" onClick={() => setCartOpen(true)}>
+            <button
+              key={`bag-${bagBump}`}
+              className={bagBump ? "bag-button is-bumped" : "bag-button"}
+              onClick={() => setCartOpen(true)}
+            >
               <Icon name="bag" size={20} />
               <span>Your bag</span>
               <b>{cartCount}</b>
@@ -633,7 +670,7 @@ export default function App() {
           )}
         </section>
 
-        <section className="lucky-banner container" aria-label="Lucky unlock rewards">
+        <section className="reveal lucky-banner container" aria-label="Lucky unlock rewards">
           <div className="lucky-banner-symbol" aria-hidden="true">
             ↻
           </div>
@@ -770,7 +807,15 @@ export default function App() {
           </div>
           <div className="product-grid">
             {displayed.map((product) => (
-              <article className="product-card" key={product.id}>
+              <article
+                className="product-card"
+                key={product.id}
+                onPointerMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  e.currentTarget.style.setProperty("--mx", `${e.clientX - r.left}px`);
+                  e.currentTarget.style.setProperty("--my", `${e.clientY - r.top}px`);
+                }}
+              >
                 <button
                   className={`product-visual tone-${product.color}-bg`}
                   onClick={() => setSelected(product)}
@@ -881,7 +926,7 @@ export default function App() {
             </div>
           </section>
         )}
-        <section className="benefits container">
+        <section className="reveal benefits container">
           {[
             {
               icon: "shield",
@@ -914,7 +959,7 @@ export default function App() {
           ))}
         </section>
 
-        <section className="collections container">
+        <section className="reveal collections container">
           <button
             className="collection-card security-collection"
             onClick={() => goToShop("Antivirus")}
@@ -955,7 +1000,7 @@ export default function App() {
           </button>
         </section>
 
-        <section className="how-section container" id="how-it-works">
+        <section className="reveal how-section container" id="how-it-works">
           <div className="how-heading">
             <div className="eyebrow">FROM CLICK TO ACTIVATED.</div>
             <h2>
@@ -998,7 +1043,7 @@ export default function App() {
           </div>
         </section>
 
-        <section className="faq-section container" id="help">
+        <section className="reveal faq-section container" id="help">
           <div className="faq-heading">
             <div className="eyebrow">GOOD QUESTIONS. STRAIGHT ANSWERS.</div>
             <h2>
@@ -1111,6 +1156,27 @@ export default function App() {
       </footer>
 
       <ConsentBanner open={consentOpen} onClose={() => setConsentOpen(false)} />
+      <QuickSearch
+        open={searchOpen}
+        products={products}
+        onClose={() => setSearchOpen(false)}
+        onOpenProduct={(p) => {
+          setSearchOpen(false);
+          setSelected(p);
+        }}
+        onAdd={(p) => addToCart(p)}
+      />
+      {cartCount > 0 && !overlay && !searchOpen && (
+        <button className="mobile-bag-bar" onClick={() => setCartOpen(true)}>
+          <span>
+            <Icon name="bag" size={18} /> {cartCount} {cartCount === 1 ? "item" : "items"}
+          </span>
+          <strong>
+            {money(rewardApplied && reward ? discounted.total : total)} · View bag{" "}
+            <Icon name="arrow" size={15} />
+          </strong>
+        </button>
+      )}
       {!overlay && (
         <button
           className={`rewards-launcher ${compareIds.length ? "above-comparison" : ""} ${footerInView ? "is-tucked" : ""}`}

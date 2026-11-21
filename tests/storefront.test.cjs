@@ -184,7 +184,9 @@ test("spin reward survives closing, applies to bag totals, and can be removed", 
   assert.ok(text(render()).includes("Estimated total (USD)"));
   assert.ok(text(render()).includes(`$${updated.total.toFixed(2)}`));
   find(render(), (n) => n.props?.["aria-label"] === "Close dialog").props.onClick();
-  find(render(), (n) => n.props?.className === "bag-button").props.onClick();
+  find(render(), (n) =>
+    String(n.props?.className).split(" ").includes("bag-button"),
+  ).props.onClick();
   find(render(), (n) => n.props?.["aria-label"] === "Remove reward from bag").props.onClick();
   assert.ok(!text(render()).includes("Estimated total"));
 });
@@ -298,7 +300,9 @@ test("checkout hands the bag and the reward code to Wix", async () => {
     render(),
     (n) => n.props?.["aria-label"] === "Add Norton 360 Standard to bag",
   ).props.onClick();
-  find(render(), (n) => n.props?.className === "bag-button").props.onClick();
+  find(render(), (n) =>
+    String(n.props?.className).split(" ").includes("bag-button"),
+  ).props.onClick();
   find(
     render(),
     (n) => n.type === "button" && text(n).includes("Review your order"),
@@ -394,4 +398,17 @@ test("consent: no tracking tags or banner unless tag IDs are configured", () => 
     consent = h.load("src/consent.tsx");
   assert.equal(consent.trackingConfigured, false);
   assert.equal(consent.ConsentBanner({ open: true, onClose() {} }), null);
+});
+
+test("quick search ranks name and brand matches and handles misses", () => {
+  const h = harness(),
+    { searchProducts } = h.load("src/QuickSearch.tsx"),
+    { products } = h.load("src/catalog.ts");
+  const norton = searchProducts(products, "norton");
+  assert.ok(norton.length > 0 && norton.every((p) => /norton/i.test(p.brand + p.name)));
+  const vpn = searchProducts(products, "vpn");
+  assert.ok(vpn.length > 0);
+  assert.equal(searchProducts(products, "zzzz-not-a-product").length, 0);
+  assert.ok(searchProducts(products, "").length > 0, "popular picks when the box is empty");
+  assert.ok(searchProducts(products, "o", 3).length <= 3);
 });
