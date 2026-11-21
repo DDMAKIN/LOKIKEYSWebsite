@@ -12,6 +12,9 @@ updates:
       # Node type definitions track the Node version the site runs on (22, see .mise.toml).
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      # TypeScript 7 (native compiler) drops the JS API the test harness uses; revisit later.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
