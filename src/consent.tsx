@@ -16,7 +16,7 @@ export const TRACKING = {
 export const trackingConfigured = Boolean(TRACKING.googleTagId || TRACKING.metaPixelId);
 
 export type Choice = { analytics: boolean; ads: boolean; at: number };
-const KEY = "loki-consent-v1";
+const STORAGE_NAME = "loki-consent-v1";
 const MAX_AGE = 365 * 24 * 60 * 60 * 1000;
 
 export const gpcEnabled = () =>
@@ -25,7 +25,7 @@ export const gpcEnabled = () =>
 
 export function readChoice(): Choice | null {
   try {
-    const c = JSON.parse(localStorage.getItem(KEY) || "null") as Choice | null;
+    const c = JSON.parse(localStorage.getItem(STORAGE_NAME) || "null") as Choice | null;
     return c && Date.now() - c.at < MAX_AGE ? c : null;
   } catch {
     return null;
@@ -34,7 +34,7 @@ export function readChoice(): Choice | null {
 
 function saveChoice(c: Choice) {
   try {
-    localStorage.setItem(KEY, JSON.stringify(c));
+    localStorage.setItem(STORAGE_NAME, JSON.stringify(c));
   } catch {
     /* storage blocked: ask again next visit */
   }

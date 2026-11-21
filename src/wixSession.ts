@@ -6,14 +6,14 @@ import { WIX } from "./site";
 export type Role = "visitor" | "member";
 type Tokens = { role: Role; accessToken: string; refreshToken: string; expiresAt: number };
 
-const KEY = `wix-session-${WIX.clientId}`;
+const STORAGE_NAME = `wix-session-${WIX.clientId}`;
 const LEGACY_KEY = `wix-visitor-${WIX.clientId}`;
 let memory: Tokens | null = null; // fallback when storage is blocked (private mode)
 const listeners = new Set<(role: Role) => void>();
 
 function read(): Tokens | null {
   try {
-    const raw = localStorage.getItem(KEY) ?? localStorage.getItem(LEGACY_KEY);
+    const raw = localStorage.getItem(STORAGE_NAME) ?? localStorage.getItem(LEGACY_KEY);
     if (!raw) return memory;
     const t = JSON.parse(raw) as Partial<Tokens>;
     if (typeof t.accessToken !== "string" || typeof t.refreshToken !== "string") return null;
@@ -33,8 +33,8 @@ function write(t: Tokens | null) {
   memory = t;
   try {
     localStorage.removeItem(LEGACY_KEY);
-    if (t) localStorage.setItem(KEY, JSON.stringify(t));
-    else localStorage.removeItem(KEY);
+    if (t) localStorage.setItem(STORAGE_NAME, JSON.stringify(t));
+    else localStorage.removeItem(STORAGE_NAME);
   } catch {
     /* storage blocked: keep the in-memory copy */
   }
