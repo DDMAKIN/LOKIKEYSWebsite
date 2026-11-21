@@ -140,7 +140,7 @@ test("with a shared store, limits and one-time use go through Redis and fail clo
   const store = new Map();
   const redisCalls = [];
   const fetchImpl = async (url, init) => {
-    if (url.startsWith("https://redis.example")) {
+    if (new URL(url).hostname === "redis.example") {
       const cmds = JSON.parse(init.body);
       redisCalls.push(cmds);
       return new Response(
