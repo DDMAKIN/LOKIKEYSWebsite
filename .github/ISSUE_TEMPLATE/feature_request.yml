@@ -1,0 +1,27 @@
+name: Feature or improvement
+description: Suggest an idea for the store
+title: "Idea: "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      placeholder: Customers can't tell which plans cover Mac…
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+    validations:
+      required: true
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: It keeps the site ad-safe (no unverified claims, keeps reseller and region details)
+          required: true
+        - label: It doesn't need publisher logos or artwork we don't have rights to
+          required: true

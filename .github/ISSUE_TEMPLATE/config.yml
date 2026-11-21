@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Order, key or refund help
+    url: mailto:support@lokikeys.com
+    about: Email support with your order number. Please don't post order details publicly.
+  - name: Report a security vulnerability
+    url: https://github.com/DevrajMakin28/FINAL-LOKI-KEY/security/policy
+    about: Please report security issues privately, never in a public issue.

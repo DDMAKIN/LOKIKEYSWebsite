@@ -1,0 +1,18 @@
+Copyright (c) 2026 LOKI KEYS. All rights reserved.
+
+This repository and its contents (source code, designs, text and images) are
+proprietary to LOKI KEYS. The code is visible publicly for transparency and
+security review only.
+
+No licence is granted to copy, modify, distribute, sublicense, host or use any
+part of this repository, in whole or in part, for any purpose, without prior
+written permission from LOKI KEYS (support@lokikeys.com).
+
+Security researchers may examine the code and report issues as described in
+SECURITY.md.
+
+Third-party packages listed in package.json remain under their own licences.
+Product names and trademarks of software publishers belong to their owners;
+LOKI KEYS is an independent reseller and is not affiliated with them.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.

@@ -1,0 +1,57 @@
+name: Bug report
+description: Something on the website is broken or looks wrong
+title: "Bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. **Don't include order numbers, emails, keys or passwords here.** For order help email support@lokikeys.com. For security issues see SECURITY.md.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      placeholder: The bag total doesn't update after I apply the reward code…
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the home page
+        2. Click …
+        3. See …
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Shop / product cards / search
+        - Bag or checkout
+        - Sign-in or account
+        - Help pages (privacy, terms, refunds, security)
+        - Design / layout
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and browser
+      placeholder: iPhone 15, Safari 19 / Windows 11, Chrome 140
+    validations:
+      required: true
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag images here. Crop out any personal details.

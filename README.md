@@ -66,3 +66,9 @@ Figma Make's GitHub push is one-way: a push from Make overwrites files added on 
 ## Security
 
 See `SECURITY.md` for how sign-in is protected and which headers are set. Never commit secrets. The Wix client id in `src/site.ts` is public by design: it can only start shopper and member sessions through Wix's own checks. The Wix API key for phone sign-in is a secret and lives only in the server's environment variables.
+
+## Community and licence
+
+- [Contributing guide](CONTRIBUTING.md) · [Code of conduct](CODE_OF_CONDUCT.md) · [Support](SUPPORT.md) · [Security policy](SECURITY.md)
+- Issues use templates (bug report, idea); order and security questions go to email, not public issues.
+- **Licence:** proprietary, all rights reserved ([LICENSE](LICENSE)). The code is public for transparency and security review.
