@@ -206,7 +206,9 @@ export function ProductComparison({
               </th>
               {products.map((p) => (
                 <th scope="col" key={p.id}>
-                  <span className={`comparison-monogram ${p.color}-bg`}>{p.brand.slice(0, 1)}</span>
+                  <span className={`comparison-monogram tone-${p.color}-bg`}>
+                    {p.brand.slice(0, 1)}
+                  </span>
                   <strong>{p.name}</strong>
                   <span className="comparison-price">
                     ${p.price.toFixed(2)} <small>USD</small>
@@ -239,7 +241,7 @@ export function ProductComparison({
       </div>
       <p className="match-disclaimer">
         Confirm regional availability and exact system requirements before purchasing. All prices in
-        USD. Preview only; checkout is not connected.
+        USD. The price charged is the one shown at checkout.
       </p>
     </div>
   );

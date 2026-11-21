@@ -19,3 +19,19 @@ logs/
 # beside it.
 /.plugins/
 /.opencode-skills/
+
+# Secrets and platform folders (from the ads-ready kit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+credentials.json
+service-account*.json
+.vercel/
+.netlify/
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

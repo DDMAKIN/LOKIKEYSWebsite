@@ -7,21 +7,30 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "typecheck": "tsc --noEmit -p .",
+    "test": "node --test tests/storefront.test.cjs tests/auth.test.cjs tests/phone-signin.test.mjs"
   },
   "dependencies": {
+    "firebase": "^13.4.0",
+    "jose": "^5.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.0.0",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
-    "tailwindcss": "^4.0.0",
-    "@tailwindcss/vite": "^4.0.0",
     "oxfmt": "^0.76.0",
+    "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
     "vite": "^8.1.7"
+  },
+  "pnpm": {
+    "overrides": {
+      "@grpc/grpc-js": "^1.13.6"
+    }
   }
 }

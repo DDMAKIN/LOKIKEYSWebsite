@@ -99,13 +99,13 @@ export function RewardWheel({
               ? "Your next upgrade just got better. Apply your reward and watch your bag total drop."
               : spinning
                 ? "Decrypting your reward… hold tight."
-                : "Take your bonus round. Six possible rewards, up to 20% off your preview bag. Every slice wins."}
+                : "Take your bonus round. Six possible rewards, up to 20% off your bag. Every slice wins."}
           </p>
         </div>
         {reward ? (
           <>
             <div className="reward-ticket">
-              <span>YOUR PREVIEW REWARD</span>
+              <span>YOUR REWARD CODE</span>
               <strong>{reward.code}</strong>
               <b>{reward.percent}% OFF</b>
             </div>
@@ -135,12 +135,12 @@ export function RewardWheel({
           <summary>The little details</summary>
           <p>
             One spin per page visit. Six equally likely rewards: 5%, 8%, 10%, 12%, 15%, or 20% off
-            the preview bag subtotal. One reward per bag, no stacking or cash value. Your reward
-            resets when this page reloads. This is a demo promotion, not a live offer; checkout and
-            payments are not connected.
+            your bag subtotal, applied automatically at checkout. One use per customer, one code per
+            order, no cash value. Your spin resets when this page reloads, but the code you won
+            stays valid if you type it in at checkout.
           </p>
         </details>
-        <span className="wheel-preview">Store preview · reward applies to demo totals only</span>
+        <span className="wheel-preview">Code applies at secure checkout · see terms</span>
       </div>
     </div>
   );

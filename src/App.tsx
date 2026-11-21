@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { SoftwareFinder, ProductComparison } from "./ShoppingTools";
 import { CyberCore } from "./CyberCore";
+import { products, MAX_BUDGET, type Product, type Tone } from "./catalog";
+import { SITE } from "./site";
+import { startCheckout } from "./wixCheckout";
+import { AuthPanel } from "./AuthPanel";
+import { completeSignInFromUrl, getMyMember, type Member } from "./auth";
 import {
   RewardWheel,
   pickReward,
@@ -26,7 +31,8 @@ type IconName =
   | "grid"
   | "menu"
   | "mail"
-  | "download";
+  | "download"
+  | "user";
 function Icon({
   name,
   size = 20,
@@ -100,6 +106,12 @@ function Icon({
         <path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5" />
       </>
     ),
+    user: (
+      <>
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 21a8 8 0 0 1 16 0" />
+      </>
+    ),
   };
   return (
     <svg
@@ -119,177 +131,43 @@ function Icon({
   );
 }
 
-export type Product = {
-  id: number;
-  brand: string;
-  name: string;
-  edition: string;
-  price: number;
-  category: string;
-  devices: string;
-  term: string;
-  region: string;
-  color: string;
-  badge?: string;
-  platforms: string;
-};
-const products: Product[] = [
-  {
-    id: 1,
-    brand: "Norton",
-    name: "Norton 360 Standard",
-    edition: "360 Standard",
-    price: 43.5,
-    category: "Antivirus",
-    devices: "1 device",
-    term: "1 year",
-    region: "USA / Canada",
-    color: "norton",
-    badge: "POPULAR PICK",
-    platforms: "Windows, macOS, Android & iOS",
-  },
-  {
-    id: 2,
-    brand: "McAfee",
-    name: "McAfee Internet Security",
-    edition: "Internet Security",
-    price: 17.95,
-    category: "Antivirus",
-    devices: "3 devices",
-    term: "1 year",
-    region: "See activation guide",
-    color: "mcafee",
-    badge: "GREAT VALUE",
-    platforms: "Windows",
-  },
-  {
-    id: 3,
-    brand: "Malwarebytes",
-    name: "Malwarebytes Premium",
-    edition: "Premium",
-    price: 39.99,
-    category: "Antivirus",
-    devices: "1 device",
-    term: "1 year",
-    region: "See activation guide",
-    color: "malware",
-    platforms: "Windows, macOS, Android & iOS",
-  },
-  {
-    id: 4,
-    brand: "Microsoft",
-    name: "Microsoft Office Home 2024",
-    edition: "Office Home 2024",
-    price: 29.0,
-    category: "Office & Productivity",
-    devices: "1 PC / Mac",
-    term: "One-time purchase",
-    region: "See activation guide",
-    color: "office",
-    badge: "WORK SMARTER",
-    platforms: "Windows & macOS",
-  },
-  {
-    id: 5,
-    brand: "Watchdog",
-    name: "Watchdog Anti-Malware",
-    edition: "Anti-Malware",
-    price: 39.99,
-    category: "Antivirus",
-    devices: "1 PC",
-    term: "3 years",
-    region: "See activation guide",
-    color: "watchdog",
-    platforms: "Windows",
-  },
-  {
-    id: 6,
-    brand: "Norton",
-    name: "Norton 360 Deluxe",
-    edition: "360 Deluxe",
-    price: 19.95,
-    category: "Antivirus",
-    devices: "3 devices",
-    term: "1 year",
-    region: "Europe",
-    color: "norton",
-    platforms: "Windows, macOS, Android & iOS",
-  },
-  {
-    id: 7,
-    brand: "McAfee",
-    name: "McAfee Total Protection",
-    edition: "Total Protection",
-    price: 99.99,
-    category: "Antivirus",
-    devices: "10 devices",
-    term: "1 year",
-    region: "Europe",
-    color: "mcafee",
-    platforms: "Windows, macOS, Android & iOS",
-  },
-  {
-    id: 8,
-    brand: "Norton",
-    name: "Norton 360 for Gamers",
-    edition: "360 for Gamers",
-    price: 99.99,
-    category: "Gaming",
-    devices: "3 devices",
-    term: "1 year",
-    region: "Global",
-    color: "norton",
-    platforms: "Windows, macOS, Android & iOS",
-  },
-];
+export type { Product } from "./catalog";
 const money = (value: number) => `$${value.toFixed(2)}`;
 const categories = [
   { label: "All software", icon: "grid" },
   { label: "Antivirus", icon: "shield" },
   { label: "Office & Productivity", icon: "grid" },
+  { label: "VPN & Privacy", icon: "globe" },
   { label: "Gaming", icon: "bolt" },
 ] as const;
 
-function BrandMark({ brand }: { brand: string }) {
-  if (brand === "Microsoft")
-    return (
-      <span className="microsoft-mark">
-        <i />
-        <i />
-        <i />
-        <i />
-      </span>
-    );
-  if (brand === "Norton") return <span className="norton-mark">✓</span>;
-  if (brand === "McAfee")
-    return (
-      <svg viewBox="0 0 32 36" className="mcafee-mark" fill="none" aria-hidden="true">
-        <path d="M3 3v20l13 10 13-10V3l-13 8L3 3Z" stroke="currentColor" strokeWidth="4" />
-        <path d="M10 10v10l6 5 6-5V10" stroke="currentColor" strokeWidth="3" />
-      </svg>
-    );
-  if (brand === "Malwarebytes") return <span className="malware-mark">M</span>;
-  return <Icon name="shield" size={35} />;
+const toneIcon: Record<Tone, IconName> = {
+  security: "shield",
+  malware: "search",
+  vpn: "globe",
+  office: "grid",
+  gaming: "bolt",
+  identity: "key",
+};
+
+// LOKI's own category emblem. Publisher logos and packaging are deliberately not reproduced.
+function CategoryMark({ tone, size = 18 }: { tone: Tone; size?: number }) {
+  return <Icon name={toneIcon[tone]} size={size} />;
 }
 
 function ProductBox({ product }: { product: Product }) {
   return (
-    <div className={`software-box ${product.color}`}>
+    <div className={`software-box tone-${product.color}`}>
       <div className="box-brand">
-        <BrandMark brand={product.brand} />
+        <CategoryMark tone={product.color} size={16} />
         <span>{product.brand}</span>
       </div>
       <div className="box-edition">{product.edition}</div>
       <div className="box-art">
-        {product.brand === "Microsoft" ? (
-          <div className="office-art">
-            <span />
-            <span />
-            <span />
-          </div>
-        ) : (
-          <Icon name={product.brand === "Malwarebytes" ? "shield" : "check"} size={65} />
-        )}
+        <CategoryMark tone={product.color} size={62} />
+      </div>
+      <div className="box-key" aria-hidden="true">
+        LOKI <b>KEY</b>
       </div>
       <div className="box-bottom">
         <span>{product.devices}</span>
@@ -302,7 +180,7 @@ function ProductBox({ product }: { product: Product }) {
 const faqs = [
   [
     "How will I receive my license key?",
-    "LOKI KEYS is a digital-only software store. When live checkout is available, your license key and step-by-step activation instructions will be delivered to the email address you use at checkout. There is no physical shipping.",
+    "LOKI KEYS is a digital-only software store. Once your payment is confirmed, your license key and step-by-step activation instructions are emailed to the address you use at checkout. There is no physical shipping.",
   ],
   [
     "How do I activate my software?",
@@ -313,8 +191,8 @@ const faqs = [
     "Some licenses are region-specific. Open the product details to check the activation region. If a region is not confirmed, verify compatibility before purchasing; never use a VPN to bypass a license’s region restrictions.",
   ],
   [
-    "What if I need help with activation?",
-    "Start with our activation guide below. Check that the software edition, operating system, device limit, and region match your license. Keep your order details and any error message handy when contacting the seller.",
+    "What if my key doesn't work?",
+    `Start with our activation guide. Check that the software edition, operating system, device limit, and region match your license. Still stuck? Email ${SITE.email} with your order number and a screenshot of the error, ${SITE.supportHours}. If a key won't activate and we can't fix it, you get a replacement or a refund.`,
   ],
 ];
 
@@ -325,7 +203,7 @@ export default function App() {
   const [sort, setSort] = useState("featured");
   const [showAll, setShowAll] = useState(false);
   const [platform, setPlatform] = useState("Any device");
-  const [budget, setBudget] = useState(100);
+  const [budget, setBudget] = useState(MAX_BUDGET);
   const [compareIds, setCompareIds] = useState<number[]>([]);
   const [reward, setReward] = useState<Reward | null>(null);
   const [rewardApplied, setRewardApplied] = useState(false);
@@ -338,12 +216,24 @@ export default function App() {
   const [cartOpen, setCartOpen] = useState(false);
   const [selected, setSelected] = useState<Product | null>(null);
   const [info, setInfo] = useState<
-    "guide" | "about" | "checkout" | "privacy" | "terms" | "finder" | "compare" | "rewards" | null
+    | "guide"
+    | "about"
+    | "checkout"
+    | "privacy"
+    | "terms"
+    | "finder"
+    | "compare"
+    | "rewards"
+    | "account"
+    | null
   >(null);
   const [faq, setFaq] = useState<number | null>(0);
   const [mobileNav, setMobileNav] = useState(false);
   const [toast, setToast] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [checkingOut, setCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState("");
+  const [member, setMember] = useState<Member | null>(null);
+  const [toastAction, setToastAction] = useState<"bag" | "none">("bag");
   const closeRef = useRef<HTMLButtonElement>(null);
   const overlay = cartOpen || selected !== null || info !== null;
   useEffect(
@@ -380,7 +270,7 @@ export default function App() {
     setInfo("rewards");
   };
   useEffect(() => {
-    document.title = "LOKI KEYS — Your digital world, unlocked.";
+    document.title = "LOKI KEYS — Antivirus, VPN and Office licence keys";
     let description = document.querySelector<HTMLMetaElement>('meta[name="description"]');
     if (!description) {
       description = document.createElement("meta");
@@ -388,11 +278,41 @@ export default function App() {
       document.head.appendChild(description);
     }
     description.content =
-      "Explore antivirus and productivity software at LOKI KEYS. Find your next digital essential from Norton, McAfee, Microsoft, and more.";
+      "Licence keys for Norton, McAfee, Malwarebytes, Bitdefender, Watchdog and Microsoft Office. Pay securely, get your key by email and activate it on the publisher's official site.";
+  }, []);
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const result = await completeSignInFromUrl();
+      if (!active) return;
+      if (result.status === "error") {
+        setToastAction("none");
+        setToast(result.message);
+      }
+      const me = await getMyMember();
+      if (!active) return;
+      setMember(me);
+      if (result.status === "signed-in" && me) {
+        setToastAction("none");
+        setToast(
+          me.name ? `Welcome, ${me.name.split(" ")[0]}. You're signed in.` : "You're signed in.",
+        );
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("order") === "complete") {
+      setToast("Thank you! Your order is placed. Your keys are on their way to your inbox.");
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   }, []);
   useEffect(() => {
     if (!toast) return;
-    const timer = setTimeout(() => setToast(""), 3000);
+    const timer = setTimeout(() => setToast(""), toastAction === "bag" ? 3000 : 5000);
     return () => clearTimeout(timer);
   }, [toast]);
   useEffect(() => {
@@ -437,6 +357,7 @@ export default function App() {
   };
   const addToCart = (product: Product) => {
     setCart((current) => ({ ...current, [product.id]: (current[product.id] || 0) + 1 }));
+    setToastAction("bag");
     setToast(`${product.name} added to your bag`);
   };
   const changeQuantity = (id: number, amount: number) =>
@@ -458,7 +379,7 @@ export default function App() {
     setSearch("");
     setCategory("All software");
     setPlatform("Any device");
-    setBudget(100);
+    setBudget(MAX_BUDGET);
     setSort("featured");
   };
   const cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
@@ -470,7 +391,9 @@ export default function App() {
         (category === "All software" || p.category === category) &&
         (platform === "Any device" || p.platforms.includes(platform)) &&
         p.price <= budget &&
-        `${p.name} ${p.platforms}`.toLowerCase().includes(search.toLowerCase()),
+        `${p.name} ${p.brand} ${p.category} ${p.platforms}`
+          .toLowerCase()
+          .includes(search.toLowerCase()),
     )
     .sort((a, b) =>
       sort === "low" ? a.price - b.price : sort === "high" ? b.price - a.price : a.id - b.id,
@@ -480,7 +403,7 @@ export default function App() {
     search ||
     category !== "All software" ||
     platform !== "Any device" ||
-    budget < 100 ||
+    budget < MAX_BUDGET ||
     sort !== "featured"
       ? filtered
       : filtered.slice(0, 4);
@@ -488,7 +411,7 @@ export default function App() {
     setCartOpen(false);
     setSelected(null);
     setInfo(null);
-    setCopied(false);
+    setCheckoutError("");
   };
 
   return (
@@ -542,6 +465,23 @@ export default function App() {
               }}
             >
               <Icon name="search" />
+            </button>
+            <button
+              className={member ? "account-button is-member" : "account-button"}
+              aria-label={member ? "Your account" : "Sign in or create an account"}
+              onClick={() => {
+                setMobileNav(false);
+                setInfo("account");
+              }}
+            >
+              {member ? (
+                <b aria-hidden="true">
+                  {(member.name || member.email || "L").trim()[0]!.toUpperCase()}
+                </b>
+              ) : (
+                <Icon name="user" size={19} />
+              )}
+              <span>{member ? member.name.split(" ")[0] || "Account" : "Sign in"}</span>
             </button>
             <span className="header-divider" />
             <button className="bag-button" onClick={() => setCartOpen(true)}>
@@ -655,30 +595,17 @@ export default function App() {
 
         <section className="brand-strip container" aria-label="Software brands">
           <span className="brand-strip-label">
-            BIG NAMES.
+            BRANDS WE
             <br />
-            <strong>BETTER VALUE.</strong>
+            <strong>STOCK.</strong>
           </span>
-          <div className="partner norton-partner">
-            <BrandMark brand="Norton" />
-            <span>Norton</span>
-          </div>
-          <div className="partner">
-            <BrandMark brand="McAfee" />
-            <span>McAfee</span>
-          </div>
-          <div className="partner microsoft-partner">
-            <BrandMark brand="Microsoft" />
-            <span>Microsoft</span>
-          </div>
-          <div className="partner malware-partner">
-            <BrandMark brand="Malwarebytes" />
-            <span>malwarebytes</span>
-          </div>
-          <div className="partner watchdog-partner">
-            <Icon name="shield" size={26} />
-            <span>WATCHDOG</span>
-          </div>
+          {["Norton", "McAfee", "Microsoft", "Malwarebytes", "Bitdefender", "Watchdog"].map(
+            (name) => (
+              <div className="partner" key={name}>
+                <span>{name}</span>
+              </div>
+            ),
+          )}
         </section>
 
         <section className="lucky-banner container" aria-label="Lucky unlock rewards">
@@ -694,7 +621,7 @@ export default function App() {
             </h2>
             <p>
               {rewardApplied
-                ? "Reward applied. Your preview savings grow with your bag."
+                ? "Reward applied. Your code is added automatically at checkout."
                 : "One spin. Six possible rewards. Your next upgrade, for less."}
             </p>
           </div>
@@ -773,7 +700,7 @@ export default function App() {
                 id="budget-filter"
                 type="range"
                 min="20"
-                max="100"
+                max={MAX_BUDGET}
                 step="5"
                 value={budget}
                 onChange={(e) => setBudget(Number(e.target.value))}
@@ -787,7 +714,7 @@ export default function App() {
           </div>
           <div className="results-bar">
             <span aria-live="polite">
-              {platform !== "Any device" || budget < 100
+              {platform !== "Any device" || budget < MAX_BUDGET
                 ? `${filtered.length} matching ${filtered.length === 1 ? "license" : "licenses"}`
                 : search
                   ? `${filtered.length} results for “${search}”`
@@ -798,7 +725,7 @@ export default function App() {
             {(search ||
               category !== "All software" ||
               platform !== "Any device" ||
-              budget < 100) && (
+              budget < MAX_BUDGET) && (
               <button className="reset-filter" onClick={resetFilters}>
                 Reset filters <Icon name="close" size={12} />
               </button>
@@ -820,7 +747,7 @@ export default function App() {
             {displayed.map((product) => (
               <article className="product-card" key={product.id}>
                 <button
-                  className={`product-visual ${product.color}-bg`}
+                  className={`product-visual tone-${product.color}-bg`}
                   onClick={() => setSelected(product)}
                   aria-label={`View ${product.name} details`}
                 >
@@ -889,7 +816,7 @@ export default function App() {
             !search &&
             category === "All software" &&
             platform === "Any device" &&
-            budget === 100 &&
+            budget === MAX_BUDGET &&
             sort === "featured" && (
               <button className="button outline explore-button" onClick={() => setShowAll(true)}>
                 There’s more to unlock <Icon name="arrow" size={17} />
@@ -911,8 +838,8 @@ export default function App() {
                 const product = products.find((p) => p.id === id)!;
                 return (
                   <button key={id} onClick={() => setSelected(product)} className="recent-product">
-                    <span className={`recent-icon ${product.color}-bg`}>
-                      <BrandMark brand={product.brand} />
+                    <span className={`recent-icon tone-${product.color}-bg`}>
+                      <CategoryMark tone={product.color} size={22} />
                     </span>
                     <span>
                       <strong>{product.name}</strong>
@@ -1108,6 +1035,7 @@ export default function App() {
               <button onClick={() => goToShop("Office & Productivity")}>
                 Office & productivity
               </button>
+              <button onClick={() => goToShop("VPN & Privacy")}>VPN & privacy</button>
               <button onClick={() => goToShop("Gaming")}>Gaming</button>
             </div>
             <div className="footer-links">
@@ -1115,7 +1043,16 @@ export default function App() {
               <button onClick={() => setInfo("guide")}>Activation guide</button>
               <a href="#help">Frequently asked questions</a>
               <button onClick={() => setInfo("about")}>About Loki Keys</button>
-              <button onClick={() => setInfo("terms")}>Delivery & returns</button>
+              <a href="/refund-policy.html">Delivery & refunds</a>
+              <a href="/contact.html">Contact us</a>
+            </div>
+            <div className="footer-links footer-contact">
+              <h3>Talk to a human</h3>
+              <a href={`mailto:${SITE.email}`}>
+                <Icon name="mail" size={15} /> {SITE.email}
+              </a>
+              <span>{SITE.supportHours}</span>
+              <span>{SITE.replyTime}</span>
             </div>
             <div className="footer-note">
               <Icon name="shield" size={27} />
@@ -1134,8 +1071,9 @@ export default function App() {
           <div className="footer-bottom">
             <span>© {new Date().getFullYear()} LOKI KEYS. All rights reserved.</span>
             <div>
-              <button onClick={() => setInfo("privacy")}>Privacy policy</button>
-              <button onClick={() => setInfo("terms")}>Terms of use</button>
+              <a href="/privacy-policy.html">Privacy policy</a>
+              <a href="/terms.html">Terms of use</a>
+              <a href="/refund-policy.html">Refund policy</a>
               <span>USD $</span>
             </div>
           </div>
@@ -1216,14 +1154,16 @@ export default function App() {
             <Icon name="check" size={18} />
           </span>
           {toast}
-          <button
-            onClick={() => {
-              setToast("");
-              setCartOpen(true);
-            }}
-          >
-            View bag <Icon name="arrow" size={15} />
-          </button>
+          {toastAction === "bag" && (
+            <button
+              onClick={() => {
+                setToast("");
+                setCartOpen(true);
+              }}
+            >
+              View bag <Icon name="arrow" size={15} />
+            </button>
+          )}
         </div>
       )}
       {overlay && (
@@ -1232,12 +1172,20 @@ export default function App() {
             role="dialog"
             aria-modal="true"
             aria-label={
-              cartOpen ? "Your shopping bag" : selected ? selected.name : "LOKI KEYS information"
+              cartOpen
+                ? "Your shopping bag"
+                : selected
+                  ? selected.name
+                  : info === "account"
+                    ? member
+                      ? "Your account"
+                      : "Sign in or create an account"
+                    : "LOKI KEYS information"
             }
             className={
               cartOpen
                 ? "cart-drawer"
-                : `modal ${info === "compare" ? "comparison-modal" : ""} ${info === "rewards" ? "rewards-modal" : ""}`
+                : `modal ${info === "compare" ? "comparison-modal" : ""} ${info === "rewards" ? "rewards-modal" : ""} ${info === "account" ? "auth-modal" : ""}`
             }
             onClick={(e) => e.stopPropagation()}
           >
@@ -1262,8 +1210,8 @@ export default function App() {
                         .filter((p) => cart[p.id])
                         .map((p) => (
                           <div className="cart-item" key={p.id}>
-                            <div className={`cart-mini ${p.color}-bg`}>
-                              <BrandMark brand={p.brand} />
+                            <div className={`cart-mini tone-${p.color}-bg`}>
+                              <CategoryMark tone={p.color} size={20} />
                             </div>
                             <div className="cart-item-info">
                               <h3>{p.name}</h3>
@@ -1324,14 +1272,17 @@ export default function App() {
                             <strong>−{money(discounted.savings)}</strong>
                           </div>
                           <div className="discount-total">
-                            <span>Preview total</span>
+                            <span>Estimated total</span>
                             <strong>
                               {money(discounted.total)} <small>USD</small>
                             </strong>
                           </div>
                         </>
                       ) : (
-                        <button className="cart-reward-link" onClick={openRewards}>
+                        <button
+                          className="cart-reward-link"
+                          onClick={() => (reward ? setRewardApplied(true) : openRewards())}
+                        >
                           {reward
                             ? `Apply your ${reward.percent}% reward`
                             : "Feeling lucky? Spin for a little extra off"}
@@ -1349,7 +1300,7 @@ export default function App() {
                         Review your order <Icon name="arrow" size={18} />
                       </button>
                       <span className="cart-preview-note">
-                        Store preview · checkout is not yet available
+                        Secure checkout by Wix · taxes calculated at checkout
                       </span>
                     </div>
                   </>
@@ -1377,7 +1328,7 @@ export default function App() {
               </>
             ) : selected ? (
               <div className="product-detail">
-                <div className={`detail-visual ${selected.color}-bg`}>
+                <div className={`detail-visual tone-${selected.color}-bg`}>
                   <ProductBox product={selected} />
                 </div>
                 <div className="eyebrow">{selected.category}</div>
@@ -1427,7 +1378,10 @@ export default function App() {
               </div>
             ) : (
               <div className="info-content">
-                {info !== "rewards" && <div className="eyebrow">A LITTLE HELP FROM LOKI</div>}
+                {info !== "rewards" && info !== "account" && (
+                  <div className="eyebrow">A LITTLE HELP FROM LOKI</div>
+                )}
+                {info === "account" && <AuthPanel member={member} onClose={closeOverlay} />}
                 {info === "rewards" && (
                   <RewardWheel
                     reward={reward}
@@ -1531,14 +1485,13 @@ export default function App() {
                 {info === "checkout" && (
                   <>
                     <h2>
-                      A great start.
+                      Almost yours.
                       <br />
-                      Not quite checkout.
+                      Let’s check out.
                     </h2>
                     <p>
-                      This is a storefront preview. Payments, license fulfillment, and customer
-                      accounts are not connected yet. No order will be placed and no payment will be
-                      collected.
+                      You’ll pay on our secure checkout, hosted by Wix. Your keys and activation
+                      instructions are emailed to you once payment is confirmed.
                     </p>
                     <div className="order-review">
                       {products
@@ -1547,6 +1500,7 @@ export default function App() {
                           <div key={p.id}>
                             <span>
                               {p.name} × {cart[p.id]}
+                              <small className="order-region"> · {p.region}</small>
                             </span>
                             <strong>{money(p.price * cart[p.id])}</strong>
                           </div>
@@ -1564,35 +1518,63 @@ export default function App() {
                             <strong>−{money(discounted.savings)}</strong>
                           </div>
                           <div className="order-total">
-                            <span>Preview total (USD)</span>
+                            <span>Estimated total (USD)</span>
                             <strong>{money(discounted.total)}</strong>
                           </div>
                         </>
                       )}
                     </div>
+                    {member ? (
+                      <p className="checkout-account">
+                        <Icon name="user" size={15} /> Signed in as{" "}
+                        <strong>{member.email || member.phone || member.name}</strong>. This order
+                        will be saved to your account.
+                      </p>
+                    ) : (
+                      <p className="checkout-account">
+                        <Icon name="user" size={15} /> Have an account?{" "}
+                        <button className="text-link" onClick={() => setInfo("account")}>
+                          Sign in
+                        </button>{" "}
+                        to save this order to it, or check out as a guest.
+                      </p>
+                    )}
+                    <p className="checkout-fineprint">
+                      Check each key’s activation region before you pay. By continuing you agree to
+                      our <a href="/terms.html">terms</a> and{" "}
+                      <a href="/refund-policy.html">refund policy</a>.
+                    </p>
+                    {checkoutError && (
+                      <p className="checkout-error" role="alert">
+                        {checkoutError}
+                      </p>
+                    )}
                     <button
                       className="button primary"
+                      disabled={checkingOut || total === 0}
                       onClick={async () => {
+                        setCheckingOut(true);
+                        setCheckoutError("");
                         try {
-                          await navigator.clipboard.writeText(
+                          const url = await startCheckout(
                             products
                               .filter((p) => cart[p.id])
-                              .map(
-                                (p) => `${p.name} × ${cart[p.id]} — ${money(p.price * cart[p.id])}`,
-                              )
-                              .join("\n") +
-                              `\nSubtotal: ${money(total)} USD${rewardApplied && reward ? `\n${reward.code} (${reward.percent}%): -${money(discounted.savings)}\nPreview total: ${money(discounted.total)} USD` : ""}\nPreview only — no order placed.`,
+                              .map((p) => ({ product: p, quantity: cart[p.id] })),
+                            rewardApplied && reward ? reward.code : undefined,
                           );
-                          setCopied(true);
-                        } catch {
-                          setToast(
-                            "Copy unavailable. You can select and copy the order details above.",
+                          window.location.assign(url);
+                        } catch (e) {
+                          setCheckoutError(
+                            e instanceof Error
+                              ? e.message
+                              : "Checkout couldn't start. Please try again.",
                           );
+                          setCheckingOut(false);
                         }
                       }}
                     >
-                      {copied ? "Order summary copied" : "Copy order summary"}
-                      <Icon name={copied ? "check" : "arrow"} size={17} />
+                      {checkingOut ? "Opening secure checkout…" : "Continue to secure checkout"}
+                      <Icon name={checkingOut ? "key" : "arrow"} size={17} />
                     </button>
                   </>
                 )}
@@ -1600,42 +1582,47 @@ export default function App() {
                   <>
                     <h2>Your privacy matters.</h2>
                     <p>
-                      This preview does not create accounts, process payments, or submit your
-                      information to a LOKI KEYS server. Your shopping bag is temporary and clears
-                      when you reload the page.
+                      We collect only what we need to deliver your order: your name, email and
+                      billing country at checkout. Payments are handled on Wix’s secure checkout, so
+                      we never see your full card number. We don’t sell your data, and this site
+                      runs no ad trackers or analytics.
                     </p>
                     <p>
-                      Google Fonts and the hosting platform may receive basic technical request data
-                      when the site loads. No optional analytics or advertising tools have been
-                      added to this storefront.
+                      You can ask us to see, correct or delete your data at any time by emailing{" "}
+                      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.
                     </p>
-                    <p>
-                      A complete business privacy policy and contact details must be provided before
-                      the store accepts orders.
-                    </p>
+                    <a className="button primary" href="/privacy-policy.html">
+                      Read the full privacy policy <Icon name="arrow" size={17} />
+                    </a>
                   </>
                 )}
                 {info === "terms" && (
                   <>
                     <h2>The important details.</h2>
-                    <h3>Preview only</h3>
-                    <p>
-                      Products and prices are adapted from the supplied reference catalog for
-                      demonstration. Availability, regional eligibility, and pricing must be
-                      verified before the store goes live. No purchases can currently be completed.
-                    </p>
                     <h3>Digital delivery</h3>
                     <p>
-                      The intended live service delivers license keys by email, not physical
-                      shipment. Delivery times and support details will be confirmed before checkout
-                      is enabled.
+                      Every product is a license key emailed to you once payment is confirmed.
+                      Nothing is shipped. Prices are in USD.
                     </p>
-                    <h3>Returns & activation issues</h3>
+                    <h3>If a key won’t activate</h3>
                     <p>
-                      A final refund policy must be published before trading. If a future purchased
-                      key fails to activate, retain your order details and contact the seller.
-                      Nothing here limits your statutory consumer rights.
+                      Email us within 14 days of delivery. We’ll help you activate it, send a
+                      replacement or refund you in full. Keys that have already been activated can’t
+                      be refunded.
                     </p>
+                    <h3>Independent reseller</h3>
+                    <p>
+                      LOKI KEYS isn’t affiliated with the software publishers. Activation happens on
+                      the publisher’s own website under their license terms.
+                    </p>
+                    <div className="info-links">
+                      <a className="button primary" href="/refund-policy.html">
+                        Refund policy <Icon name="arrow" size={17} />
+                      </a>
+                      <a className="button outline" href="/terms.html">
+                        Terms of use
+                      </a>
+                    </div>
                   </>
                 )}
               </div>

@@ -1,10 +1,18 @@
 {
-  "description": "Browse LOKI KEYS products and services, explore key and locksmith solutions, and find the information you need to choose the right option.",
+  "title": "LOKI KEYS — Antivirus, VPN and Office licence keys",
+  "description": "Licence keys for Norton, McAfee, Malwarebytes, Bitdefender, Watchdog and Microsoft Office. Pay securely, get your key by email and activate it on the publisher's official site.",
+  "language": "en",
   "robots": {
-    "index": false
+    "index": true
+  },
+  "icons": {
+    "icon": "/favicon.png"
+  },
+  "openGraph": {
+    "image": "https://ditch-mess-23616146.figma.site/images/og-image.jpg"
   },
   "accessibility": {
-    "addBypassLinks": false,
+    "addBypassLinks": true,
     "ignoreReducedMotion": false
   }
 }

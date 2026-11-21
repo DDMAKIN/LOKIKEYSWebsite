@@ -6,7 +6,7 @@ const ts = require("typescript");
 const React = require("react");
 
 // Run component event handlers with isolated hook state, without a browser or extra dependencies.
-function harness() {
+function harness(stubs = {}) {
   const timers = [];
   let state = [],
     cursor = 0;
@@ -31,13 +31,15 @@ function harness() {
   function load(path) {
     if (cache[path]) return cache[path];
     const exports = {};
-    const code = ts.transpileModule(fs.readFileSync(path, "utf8"), {
-      compilerOptions: {
-        module: ts.ModuleKind.CommonJS,
-        jsx: ts.JsxEmit.ReactJSX,
-        target: ts.ScriptTarget.ES2020,
-      },
-    }).outputText;
+    const code = ts
+      .transpileModule(fs.readFileSync(path, "utf8"), {
+        compilerOptions: {
+          module: ts.ModuleKind.CommonJS,
+          jsx: ts.JsxEmit.ReactJSX,
+          target: ts.ScriptTarget.ES2020,
+        },
+      })
+      .outputText.replace(/import\.meta\.env/g, "(globalThis.__env || {})");
     vm.runInNewContext(code, {
       exports,
       setTimeout: (callback) => {
@@ -45,17 +47,16 @@ function harness() {
         return timers.length;
       },
       clearTimeout() {},
-      window: { matchMedia: () => ({ matches: false }) },
-      require: (name) =>
-        name === "react"
-          ? hooks
-          : name === "./ShoppingTools"
-            ? load("src/ShoppingTools.tsx")
-            : name === "./RewardWheel"
-              ? load("src/RewardWheel.tsx")
-              : name === "./CyberCore"
-                ? load("src/CyberCore.tsx")
-                : require(name),
+      window: stubs.window || { matchMedia: () => ({ matches: false }) },
+      require: (name) => {
+        if (name === "react") return hooks;
+        if (stubs[name]) return stubs[name];
+        if (name.startsWith("./")) {
+          const base = "src/" + name.slice(2);
+          return load(fs.existsSync(base + ".tsx") ? base + ".tsx" : base + ".ts");
+        }
+        return require(name);
+      },
     });
     cache[path] = exports;
     return exports;
@@ -99,7 +100,7 @@ test("live filters, reset, and empty-result state", () => {
   tree = render();
   find(tree, (n) => n.props?.id === "budget-filter").props.onChange({ target: { value: "30" } });
   tree = render();
-  assert.equal(nodes(tree).filter((n) => n.props?.className === "product-card").length, 2);
+  assert.equal(nodes(tree).filter((n) => n.props?.className === "product-card").length, 5);
   find(tree, (n) => n.props?.id === "product-search").props.onChange({
     target: { value: "not-a-product" },
   });
@@ -165,25 +166,27 @@ test("spin reward survives closing, applies to bag totals, and can be removed", 
   result.props.onApply();
   const expected = h
     .load("src/RewardWheel.tsx")
-    .calculateDiscount(43.5, result.props.reward.percent);
-  assert.ok(text(render()).includes("Preview total"));
+    .calculateDiscount(29.95, result.props.reward.percent);
+  assert.ok(text(render()).includes("Estimated total"));
   assert.ok(text(render()).includes(`$${expected.total.toFixed(2)}`));
   find(
     render(),
     (n) => n.props?.["aria-label"] === "Increase Norton 360 Standard quantity",
   ).props.onClick();
-  const updated = h.load("src/RewardWheel.tsx").calculateDiscount(87, result.props.reward.percent);
+  const updated = h
+    .load("src/RewardWheel.tsx")
+    .calculateDiscount(59.9, result.props.reward.percent);
   assert.ok(text(render()).includes(`$${updated.total.toFixed(2)}`));
   find(
     render(),
     (n) => n.type === "button" && text(n).includes("Review your order"),
   ).props.onClick();
-  assert.ok(text(render()).includes("Preview total (USD)"));
+  assert.ok(text(render()).includes("Estimated total (USD)"));
   assert.ok(text(render()).includes(`$${updated.total.toFixed(2)}`));
   find(render(), (n) => n.props?.["aria-label"] === "Close dialog").props.onClick();
   find(render(), (n) => n.props?.className === "bag-button").props.onClick();
   find(render(), (n) => n.props?.["aria-label"] === "Remove reward from bag").props.onClick();
-  assert.ok(!text(render()).includes("Preview total"));
+  assert.ok(!text(render()).includes("Estimated total"));
 });
 
 test("comparison enforces three selections and connects add-to-bag", () => {
@@ -252,4 +255,105 @@ test("finder steps produce relevant matches and can restart", () => {
   assert.equal(tools.getRecommendations(fixture, ["Antivirus", "iOS", "30"]).length, 0);
   find(render(), (n) => n.type === "button" && text(n).includes("Start again")).props.onClick();
   assert.ok(text(render()).includes("What’s on your agenda?"));
+});
+
+test("every product maps to a unique Wix plan with a stated region", () => {
+  const { products, MAX_BUDGET } = harness().load("src/catalog.ts");
+  const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+  assert.ok(products.length >= 20);
+  assert.equal(new Set(products.map((p) => p.id)).size, products.length);
+  assert.equal(new Set(products.map((p) => p.name)).size, products.length);
+  assert.equal(new Set(products.map((p) => p.wixVariantId)).size, products.length);
+  for (const p of products) {
+    assert.match(p.wixProductId, uuid, p.name);
+    assert.match(p.wixVariantId, uuid, p.name);
+    assert.ok(p.region && !/see activation guide/i.test(p.region), `${p.name} needs a real region`);
+    assert.ok(p.price > 0 && p.price <= MAX_BUDGET, p.name);
+  }
+});
+
+test("checkout hands the bag and the reward code to Wix", async () => {
+  const calls = [];
+  let assigned = "";
+  const stub = {
+    startCheckout: async (lines, code) => {
+      calls.push({ lines, code });
+      return "https://checkout.example/session";
+    },
+  };
+  const h = harness({
+    "./wixCheckout": stub,
+    window: {
+      matchMedia: () => ({ matches: false }),
+      location: { assign: (url) => (assigned = url), search: "", pathname: "/" },
+    },
+  });
+  const App = h.load("src/App.tsx").default;
+  const render = () => h.render(App);
+  find(
+    render(),
+    (n) => n.props?.["aria-label"] === "Add Norton 360 Standard to bag",
+  ).props.onClick();
+  find(
+    render(),
+    (n) => n.props?.["aria-label"] === "Add Norton 360 Standard to bag",
+  ).props.onClick();
+  find(render(), (n) => n.props?.className === "bag-button").props.onClick();
+  find(
+    render(),
+    (n) => n.type === "button" && text(n).includes("Review your order"),
+  ).props.onClick();
+  const go = find(
+    render(),
+    (n) => n.type === "button" && text(n).includes("Continue to secure checkout"),
+  );
+  await go.props.onClick();
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].lines.length, 1);
+  assert.equal(calls[0].lines[0].quantity, 2);
+  assert.equal(calls[0].lines[0].product.wixVariantId, "4a77c3bd-5041-4d21-a1f5-3a8dd4b397b4");
+  assert.equal(calls[0].code, undefined);
+  assert.equal(assigned, "https://checkout.example/session");
+});
+
+test("contact details and legal links are on the page", () => {
+  const h = harness(),
+    App = h.load("src/App.tsx").default;
+  const tree = h.render(App);
+  const page = text(tree);
+  const { SITE } = h.load("src/site.ts");
+  assert.ok(page.includes(SITE.email));
+  const hrefs = nodes(tree)
+    .map((n) => n.props?.href)
+    .filter(Boolean);
+  for (const href of [
+    "/privacy-policy.html",
+    "/terms.html",
+    "/refund-policy.html",
+    "/contact.html",
+  ]) {
+    assert.ok(hrefs.includes(href), `footer links to ${href}`);
+  }
+  assert.ok(!/preview only|not yet available|demo promotion/i.test(page));
+});
+
+test("header sign-in opens the account dialog and checkout offers to save the order", () => {
+  const h = harness(),
+    App = h.load("src/App.tsx").default,
+    { AuthPanel, passwordProblem } = h.load("src/AuthPanel.tsx");
+  const render = () => h.render(App);
+  const signIn = find(render(), (n) => n.props?.["aria-label"] === "Sign in or create an account");
+  assert.ok(text(signIn).includes("Sign in"));
+  signIn.props.onClick();
+  const tree = render();
+  const dialog = find(tree, (n) => n.props?.role === "dialog");
+  assert.equal(dialog.props["aria-label"], "Sign in or create an account");
+  assert.ok(dialog.props.className.includes("auth-modal"));
+  const panel = find(tree, (n) => n.type === AuthPanel);
+  assert.equal(panel.props.member, null);
+
+  assert.equal(passwordProblem("short1"), "Use at least 8 characters.");
+  assert.equal(passwordProblem("lettersonly"), "Mix letters and numbers.");
+  assert.equal(passwordProblem("12345678"), "Mix letters and numbers.");
+  assert.equal(passwordProblem("loki2026keys"), null);
 });

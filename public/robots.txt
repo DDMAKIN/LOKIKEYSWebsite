@@ -1,0 +1,19 @@
+# Allow Google's ad crawlers so ads aren't rejected as "destination not crawlable".
+# AdsBot ignores the "*" group, so it is named explicitly.
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: *
+Allow: /
+
+# Update this address if you move the site to your own domain
+Sitemap: https://ditch-mess-23616146.figma.site/sitemap.xml
